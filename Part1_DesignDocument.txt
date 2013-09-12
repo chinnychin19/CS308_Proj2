@@ -16,7 +16,7 @@ Class implementation plan:
 			- int myCID: collision ID
 			- List<Spring> mySprings: list of Spring (and Muscle!) references that are attached and act on this mass
 		Overridden/Additional methods:
-			- public FixedMass(double x, double y):
+			- public Mass(double x, double y):
 				+ set speeds and mass to zero
 				+ set the position
 				+ set the collision ID to a constant
@@ -30,7 +30,7 @@ Class implementation plan:
 	MovingMass (Subclass of Mass):
 		Additional fields: (none)
 		Methods:
-			- public Mass(double x, double y, double xSpeed, double ySpeed, double mass):
+			- public MovingMass(double x, double y, double xSpeed, double ySpeed, double mass):
 				+ set the given fields
 				+ set the collision ID to a constant
 			- move():
