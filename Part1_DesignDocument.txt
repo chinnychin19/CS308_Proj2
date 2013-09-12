@@ -1,0 +1,74 @@
+Part 1 (Design Document)
+
+Class Hierarchy:
+	- Mass extends PhysicalObject
+		+ MovingMass extends Mass
+		+ Wall extends Mass
+	- Spring extends Physical Object
+		+ Muscle extends Spring
+
+Class implementation plan:
+	Mass (Base class):
+		Fields:
+			- double myX, myY: the current coordinates
+			- double myXSpeed, myYSpeed: the current x and y velocities
+			- double myMass: the mass
+			- int myCID: collision ID
+			- List<Spring> mySprings: list of Spring (and Muscle!) references that are attached and act on this mass
+		Overridden/Additional methods:
+			- public Mass(double x, double y):
+				+ set speeds and mass to zero
+				+ set the position
+				+ set the collision ID to a constant
+			- hit(): do nothing
+			- move(): do nothing
+			- paintFrame():
+				+ draw a small dot
+			- setSprings(List<Spring> springs): set the springs
+			- getters for x, y, xSpeed, ySpeed, mass
+	
+	MovingMass (Subclass of Mass):
+		Additional fields: (none)
+		Methods:
+			- public MovingMass(double x, double y, double xSpeed, double ySpeed, double mass):
+				+ set the given fields
+				+ set the collision ID to a constant
+			- move():
+				+ consider forces from attached springs, viscosity, and gravity to change the myXSpeed and myYSpeed values
+				+ update myX and myY based on new velocities
+			- hit():
+				+ if colliding with a Wall, calculate the angle and update myXSpeed and myYSpeed
+		
+	Wall (Subclass of Mass):
+		Additional fields:
+			double myWidth, myHeight: the size
+		Methods:
+			- public Wall(double x, double y, double width, double height):
+				+ will set given fields
+				+ speed/angle/mass should be zero by default
+			- paintFrame():
+				+ draw a rectangle
+			- getters for myX, myY, myWidth, and myHeight
+
+	Spring (Base class):
+		Fields:
+			- double myRestLength: equilibrium length of spring
+			- Mass myMass1, myMass2: the masses that are anchored to this spring
+			- double myK: spring constant
+		Methods:
+			- public Spring(Mass m1, Mass m2, double k, double restLength):
+				+ set the fields
+			- getForce():
+				+ return a value based on F=k*x, where the sign refers to the direction (either towards center of spring or away from it)
+			- paintFrame():
+				+ draw a line segment from myMass1's position to myMass2's position
+			- move():
+				+ do nothing
+			
+	Muscle (Subclass of Spring):
+		Additional fields:
+			- double myAmplitude
+		Overridden/Additional methods:
+			- move(): call doHarmonicMotion()
+			- doHarmonicMotion(): update myRestLength sinusoidally based on World's time and World's frequency
+		
