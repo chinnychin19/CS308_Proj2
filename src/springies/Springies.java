@@ -1,5 +1,6 @@
 package springies;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import jboxGlue.*;
@@ -11,12 +12,7 @@ import org.jbox2d.common.Vec2;
 
 @SuppressWarnings( "serial" )
 public class Springies extends JGEngine
-{
-	private Map<String, Map<String, Double>> FixedMasses;
-	private Map<String, Map<String, Double>> Masses;
-	private Map<String, Map<String, Double>> Springs;
-	private Map<String, Map<String, Double>> Muscles;
-	
+{	
 	public Springies( )
 	{
 		// set the window size
@@ -59,8 +55,14 @@ public class Springies extends JGEngine
 		ball.setPos( displayWidth()/2, displayHeight()/2 );
 		ball.setForce( 8000, -10000 );
 
-		Parser p = new Parser("../example.xml");
-		p.parseAndGenerateObjects();
+		Parser p = new Parser("xml/example.xml");
+		
+		FixedMasses = p.parseFixedMasses();
+		Masses = p.parseMasses();
+		Springs = p.parseSprings();
+		Muscles = p.parseMuscles();
+		
+		
 		
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
@@ -93,5 +95,11 @@ public class Springies extends JGEngine
 	{
 		// nothing to do
 		// the objects paint themselves
+	}
+	
+	public void createMasses(Map<String, Map<String, Double>> Masses) {
+		for(Map<String, Double> attrs : Masses.values()) {
+			
+		}
 	}
 }
