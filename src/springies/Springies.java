@@ -55,13 +55,7 @@ public class Springies extends JGEngine
 		ball.setPos( displayWidth()/2, displayHeight()/2 );
 		ball.setForce( 8000, -10000 );
 
-		Parser p = new Parser("xml/example.xml");
-		
-		FixedMasses = p.parseFixedMasses();
-		Masses = p.parseMasses();
-		Springs = p.parseSprings();
-		Muscles = p.parseMuscles();
-		
+		Parser p = new Parser("xml/example.xml");		
 		
 		
 		// add walls to bounce off of
@@ -95,11 +89,5 @@ public class Springies extends JGEngine
 	{
 		// nothing to do
 		// the objects paint themselves
-	}
-	
-	public void createMasses(Map<String, Map<String, Double>> Masses) {
-		for(Map<String, Double> attrs : Masses.values()) {
-			
-		}
 	}
 }

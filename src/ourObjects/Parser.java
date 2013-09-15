@@ -160,14 +160,13 @@ public class Parser {
 			NodeList linkChildren = links.getChildNodes();
 
 			// Gets spring and muscle objects and constructs them
-			Muscles = new HashMap<String, Map<String, Double>>();
 			int muscleNum = 0;
 			for(int i=0; i<linkChildren.getLength(); i++) {
 				if(linkChildren.item(i).getNodeName().equalsIgnoreCase("muscle")) {
 					// Muscles
 					muscleNum++;
-					Mass mass1 = getNodeAttr("a", linkChildren.item(i));
-					Mass mass2 = getNodeAttr("b", linkChildren.item(i));
+					Mass mass1 = Masses.get(getNodeAttr("a", linkChildren.item(i)));
+					Mass mass2 = Masses.get(getNodeAttr("b", linkChildren.item(i)));
 
 					// check restLength exists?
 					Double restLength = Double.parseDouble(getNodeAttr("restlength", linkChildren.item(i)));
@@ -178,7 +177,7 @@ public class Parser {
 
 					Muscle muscle = new Muscle("muscle"+muscleNum, mass1, mass2);
 					// need to get masses out of engine with objectID
-					Muscles.put("muscle"+muscleNum,muscle);
+					Springs.put("muscle"+muscleNum,muscle);
 				}
 			}
 			
