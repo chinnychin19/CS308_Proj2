@@ -30,6 +30,10 @@ public class Mass extends PhysicalObject {
 		return myY;
 	}
 	
+	public void setMass(double m) {
+		myMass = m;
+	}
+	
 	@Override
 	public void move() {
 		//do nothing

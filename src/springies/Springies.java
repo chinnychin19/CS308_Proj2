@@ -55,8 +55,11 @@ public class Springies extends JGEngine
 		ball.setPos( displayWidth()/2, displayHeight()/2 );
 		ball.setForce( 8000, -10000 );
 
-		Parser p = new Parser("xml/example.xml");		
-		
+		Parser p = new Parser("xml/example.xml");
+		p.parseAndGenerateFixedMasses();
+		p.parseAndGenerateMasses();
+		p.parseAndGenerateSprings();
+		p.parseAndGenerateMuscles();		
 		
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass

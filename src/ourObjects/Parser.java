@@ -24,37 +24,26 @@ public class Parser {
 		myPath = path;
 	}
 	
-	public void parseAndGenerateMasses() {
+	public void parseAndGenerateMasses(String tag) {
 		try{
 			DOMParser parser = new DOMParser();
 			parser.parse(myPath);
 			Document doc = parser.getDocument();
 
-			// Gets root of XML
-			NodeList root = doc.getChildNodes();
-
-			// Gets model level nodes
-			Node model = getNode("model", root);
-			NodeList modelChildren = model.getChildNodes();
-			
-			// Gets Nodes
-			Node nodes = getNode("nodes", modelChildren);
-			NodeList nodeChildren = nodes.getChildNodes();
+			NodeList masses = doc.getElementsByTagName(tag);
 
 			// Gets Mass objects and constructs them
-			for(int i=0; i<nodeChildren.getLength(); i++) {
-				if(nodeChildren.item(i).getNodeName().equalsIgnoreCase("mass")) {
+			for(int i=0; i<masses.getLength(); i++) {
 					// Movable Masses
-					String id = getNodeAttr("id", nodeChildren.item(i));
-					Double x = Double.parseDouble(getNodeAttr("x", nodeChildren.item(i)));
-					Double y = Double.parseDouble(getNodeAttr("y", nodeChildren.item(i)));
-					Double vx = Double.parseDouble(getNodeAttr("vx", nodeChildren.item(i)));
-					Double vy = Double.parseDouble(getNodeAttr("vy", nodeChildren.item(i)));
+					String id = getNodeAttr("id", masses.item(i));
+					Double x = Double.parseDouble(getNodeAttr("x", masses.item(i)));
+					Double y = Double.parseDouble(getNodeAttr("y", masses.item(i)));
+					Double vx = Double.parseDouble(getNodeAttr("vx", masses.item(i)));
+					Double vy = Double.parseDouble(getNodeAttr("vy", masses.item(i)));
 
 					Mass mass = new MovingMass(id, x, y, vx, vy);
 					Masses.put(id, mass);
 					
-				}
 			}
 			
 		}
