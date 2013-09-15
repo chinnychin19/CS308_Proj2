@@ -8,7 +8,7 @@ import jgame.JGObject;
 
 public class Mass extends PhysicalObject {
 	private double myX, myY;
-	private double myXSpeed, myYSpeed;
+	protected double myXSpeed, myYSpeed;
 	private double myMass;
 	private int myCID;
 	private List<Spring> mySprings;

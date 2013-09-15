@@ -1,14 +1,22 @@
 package springies;
 
+import java.util.Map;
+
 import jboxGlue.*;
 import jgame.JGColor;
 import jgame.platform.JGEngine;
+import ourObjects.*;
 
 import org.jbox2d.common.Vec2;
 
 @SuppressWarnings( "serial" )
 public class Springies extends JGEngine
 {
+	private Map<String, Map<String, Double>> FixedMasses;
+	private Map<String, Map<String, Double>> Masses;
+	private Map<String, Map<String, Double>> Springs;
+	private Map<String, Map<String, Double>> Muscles;
+	
 	public Springies( )
 	{
 		// set the window size
@@ -50,6 +58,9 @@ public class Springies extends JGEngine
 		PhysicalObject ball = new BouncyBall();
 		ball.setPos( displayWidth()/2, displayHeight()/2 );
 		ball.setForce( 8000, -10000 );
+
+		Parser p = new Parser("../example.xml");
+		p.parseAndGenerateObjects();
 		
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
