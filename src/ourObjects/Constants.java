@@ -12,5 +12,7 @@ public interface Constants {
 	public static final double MASS_DEFAULT_MASS = 5;
 	public static final JGColor MASS_COLOR = JGColor.cyan, SPRING_COLOR = JGColor.orange;
 	public static final double DEFAULT_SPRING_CONSTANT = 0;
+	public static final double WALL_MARGIN = 10;
+	public static final double WALL_THICKNESS = 10;
 
 }
