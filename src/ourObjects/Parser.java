@@ -7,8 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import jboxGlue.OurWorld;
+import jboxGlue.WorldManager;
+
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
+import org.jbox2d.common.Vec2;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,8 +21,9 @@ public class Parser {
 
 	private Map<String, Mass> massMap = new HashMap<String, Mass>();
 	private List<Spring> springList = new ArrayList<Spring>();
+	private List<Wall> wallList = new ArrayList<Wall>();
 	private static final String ID_MASS = "mass", ID_FIXED = "fixed", 
-			ID_SPRING = "spring", ID_MUSCLE = "muscle"; 
+			ID_SPRING = "spring", ID_MUSCLE = "muscle", ID_WALL = "wall"; 
 
 	public void parseXML(String path) { //nodes are masses and fixed masses
 		try{
@@ -30,6 +35,51 @@ public class Parser {
 			NodeList links = getNode("links", model).getChildNodes();
 			constructNodes(nodes);
 			constructLinks(links);
+		}
+		catch(Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	public void parseEnvironment(String path, double viewWidth, double viewHeight) {
+		OurWorld myWorld = WorldManager.getWorld();
+		try{
+			DOMParser parser = new DOMParser();
+			parser.parse(path);
+			NodeList root = parser.getDocument().getChildNodes();
+			NodeList environment = getNode("environment", root).getChildNodes();
+			
+			// Handles Gravity
+			Node gravity = getNode("gravity", environment);
+			double angle = (Double.parseDouble(getNodeAttr("direction", gravity)))*Math.PI/180;
+			double magnitude = Double.parseDouble(getNodeAttr("magnitude", gravity));
+			myWorld.setGravity(new Vec2((float) (magnitude*Math.cos(angle)) , (float) (magnitude*Math.sin(angle))));
+			
+			// Handles Viscous Drag
+			Node viscosity = getNode("viscosity", environment);
+			double vis = Double.parseDouble(getNodeAttr("magnitude", viscosity));
+			myWorld.setViscosity(vis);
+			
+			// Handles CoM Forces
+			Node centermass = getNode("centermass", environment);
+			double comMag = Double.parseDouble(getNodeAttr("magnitude", centermass));
+			double comExp = Double.parseDouble(getNodeAttr("exponent", centermass));
+			myWorld.setCenterOfMass(comMag, comExp);
+			
+			// Handles Wall Generation
+			for(int i=0; i<environment.getLength(); i++){
+				Node curNode = environment.item(i);
+				if(curNode.getNodeName().equals(ID_WALL)) {
+					String id = getNodeAttr("id", curNode);
+					double repelmag = Double.parseDouble(getNodeAttr("magnitude", curNode));
+					double exponent = Double.parseDouble(getNodeAttr("exponent", curNode));
+					
+					Wall wall = new Wall(id, viewWidth, viewHeight, repelmag, exponent);
+				}
+			}
+			
+			
+			
 		}
 		catch(Exception e) {
 		    e.printStackTrace();

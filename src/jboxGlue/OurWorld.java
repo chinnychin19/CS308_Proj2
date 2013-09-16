@@ -17,7 +17,7 @@ import ourObjects.Spring;
 public class OurWorld extends World {
 	private Collection<Mass> massList;
 	private Collection<Spring> springList;
-	private double viscosity = 1, centerOfMass = 0;
+	private double viscosity = 1, com_magnitude = 0, com_exponent = 1;
 	private Vec2 gravity = new Vec2(0,0);
 	
 	public OurWorld(AABB worldBounds, Vec2 gravity, boolean doSleep) {
@@ -34,8 +34,9 @@ public class OurWorld extends World {
 		viscosity = v;
 	}
 	
-	public void setCenterOfMass(double c) {
-		centerOfMass = c;
+	public void setCenterOfMass(double magnitude, double exponent) {
+		com_magnitude = magnitude;
+		com_exponent = exponent;
 	}
 	
 	public void setMasses(Collection<Mass> masses) {
