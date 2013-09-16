@@ -49,17 +49,13 @@ public class Spring extends PhysicalObject {
 		return new Vec2(unitVectorX * springForce, unitVectorY * springForce);
 		// F = k*x, positive means spring is longer that restLength 
 	}
-	
-	@Override
-	public void move() {
-		//do nothing
-//		myMass1.getBody().applyForce(new Vec2(1,1), myMass1.getBody().getPosition());
-	}
-	
+		
 	@Override
 	public void paintShape() {
 		myEngine.setColor( myColor );
-		myEngine.drawLine(myMass1.getX(), myMass1.getY(), myMass2.getX(), myMass2.getY());
+		Vec2 p1 = myMass1.getBody().getPosition();
+		Vec2 p2 = myMass2.getBody().getPosition();
+		myEngine.drawLine(p1.x, p1.y, p2.x, p2.y);
 	}
 
 }

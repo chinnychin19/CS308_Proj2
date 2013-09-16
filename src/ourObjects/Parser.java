@@ -30,7 +30,6 @@ public class Parser {
 			NodeList links = getNode("links", model).getChildNodes();
 			constructNodes(nodes);
 			constructLinks(links);
-			attachSpringsToMasses();
 		}
 		catch(Exception e) {
 		    e.printStackTrace();
@@ -45,14 +44,6 @@ public class Parser {
 		return massMap.values();
 	}
 	
-	private void attachSpringsToMasses() {
-		for (Spring spr: springList) {
-			Mass m1 = spr.getMass1();
-			m1.getSprings().add(spr);
-			spr.getMass2().getSprings().add(spr);
-		}
-	}
-
 	private void constructNodes(NodeList nodes) {
 		for(int i=0; i<nodes.getLength(); i++) {
 			Node curNode = nodes.item(i);
@@ -76,7 +67,7 @@ public class Parser {
 						Double.parseDouble(strMass);
 				
 				if (nodeType.equals(Parser.ID_FIXED)) {
-					massMap.put(id, new Mass("", x, y));
+					massMap.put(id, new Mass("", x, y, mass));
 				} else /*if (nodeType.equals(Parser.ID_MASS))*/ {
 					massMap.put(id, new MovingMass("", x, y, vx, vy, mass));
 				}
