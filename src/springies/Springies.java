@@ -50,7 +50,7 @@ public class Springies extends JGEngine
 		
 		Parser p = new Parser();
 		p.parseEnvironment("assets/environment.xml", displayWidth(), displayHeight());
-		p.parseObjects("assets/daintywalker.xml");
+		p.parseObjects("assets/lamp.xml");
 	}
 	
 	@Override
