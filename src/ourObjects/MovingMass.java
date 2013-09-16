@@ -16,33 +16,34 @@ public class MovingMass extends Mass {
 
 	public MovingMass(String animId, double x, double y, double xSpeed, double ySpeed, double mass) {
 		super(animId, x, y);
-		myXSpeed = xSpeed;
-		myYSpeed = ySpeed;
+		setXSpeed(xSpeed);
+		setYSpeed(ySpeed);
 		setMass(mass);
 	}
 
 	@Override
 	public void move() {
-		// Move masses based on the forces applied to them. (Spring, Wall Repulsion, Center of Gravity (?) and Viscous Drag)
-		// Note: Gravity *should* already be handled by the World (?)
+		// Move masses based on the forces applied to them.
 		// Find net force in X and Y directions, then apply the net force to the object
-		super.move();
 		Vec2 netForce = new Vec2();
 		
-		// Spring Forces
-		List<Spring> springs = getSprings();
-		for(Spring spring : springs) {
-			netForce = netForce.add(spring.getForce(this));
-		}
+		// TODO: Spring Forces
+//		List<Spring> springs = getSprings();
+//		for(Spring spring : springs) {
+//			netForce = netForce.add(spring.getForce(this));
+//		}
 		
-		// TODO:Wall Repulsion
+		// TODO: gravity
 		
-		// TODO:Center of Gravity
+		// TODO: Wall Repulsion
 		
-		// TODO:Viscous Drag
+		// TODO: Center of mass
 		
-		// TODO:Return Net of All forces
-		this.setForce(netForce);
+		// TODO: Viscous Drag
+		
+		// Return Net of All forces
+//		this.setForce(netForce);
+		super.move();
 	}
 
 	@Override
