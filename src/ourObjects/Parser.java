@@ -139,18 +139,17 @@ public class Parser {
 				String strRestLength = getNodeAttr("restLength", curNode);
 				double restLength = strRestLength.isEmpty() ? 0 : Double.parseDouble(strRestLength);
 				String strConstant = getNodeAttr("constant", curNode);
-				double constant = strConstant.isEmpty() ? 0 : Double.parseDouble(strConstant);
+				double constant = strConstant.isEmpty() ? 
+						Constants.DEFAULT_SPRING_CONSTANT : Double.parseDouble(strConstant);
 				String strAmplitude = getNodeAttr("amplitude", curNode);
 				double amplitude = strAmplitude.isEmpty() ? 0 : Double.parseDouble(strAmplitude);
 				
 				if (nodeType.equals(Parser.ID_SPRING)) {
 					Spring theSpring = new Spring("", m1, m2);
-					theSpring.setRestLength(restLength);
 					theSpring.setConstant(constant);
 					springList.add(theSpring);
 				} else if (nodeType.equals(Parser.ID_MUSCLE)) {
 					Muscle theMuscle = new Muscle("", m2, m2);
-					theMuscle.setRestLength(restLength);
 					theMuscle.setConstant(constant);
 					theMuscle.setAmplitude(amplitude);
 					springList.add(theMuscle);

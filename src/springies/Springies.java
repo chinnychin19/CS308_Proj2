@@ -49,6 +49,7 @@ public class Springies extends JGEngine
 		WorldManager.initWorld( this );
 		
 		Parser p = new Parser();
+		p.parseEnvironment("assets/environment.xml", viewWidth(), viewHeight());
 		p.parseXML("assets/example.xml");
 		WorldManager.getWorld().setMasses(p.getMassList());
 		WorldManager.getWorld().setSprings(p.getSpringList());

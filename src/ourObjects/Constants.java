@@ -16,4 +16,6 @@ public interface Constants {
 	public static final double DEFAULT_SPRING_CONSTANT = 1;
 	public static final double WALL_MARGIN = 10;
 	public static final double WALL_THICKNESS = 10;
+	public static final double VISCOSITY_MULTIPLIER = 200;
+	public static final float SPRING_MULTIPLIER = 10f;
 }

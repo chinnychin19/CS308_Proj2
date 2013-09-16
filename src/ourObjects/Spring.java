@@ -38,19 +38,7 @@ public class Spring extends PhysicalObject {
 	public Mass getMass2() {
 		return myMass2;
 	}
-	
-//	public Vec2 getForce(Mass m) {
-//		Mass otherMass = (m == myMass1 ? myMass2 : myMass1);
-//		
-//		float unitVectorX = (float) ((otherMass.getX()-m.getX())/getCurLength());
-//		float unitVectorY = (float) ((otherMass.getX()-m.getX())/getCurLength());
-//		
-//		float springForce = (float) ((getCurLength()-myRestLength) * myConstant);
-//		
-//		return new Vec2(unitVectorX * springForce, unitVectorY * springForce);
-//		// F = k*x, positive means spring is longer that restLength 
-//	}
-	
+		
 	public void move() {
 		applyForce();
 	}
@@ -61,8 +49,8 @@ public class Spring extends PhysicalObject {
 				myMass2.getBody().getPosition());
 		
 		//Force is positive if contracting
-		float force = (float) ((getCurLength()-myRestLength) * myConstant);
-//		System.out.println("force: "+force);
+		float force = Constants.SPRING_MULTIPLIER * (float) 
+				((getCurLength()-myRestLength) * myConstant);
 		
 		myMass1.getBody().applyForce(new Vec2(uVec.x * force, uVec.y * force), 
 				myMass1.getBody().getPosition());

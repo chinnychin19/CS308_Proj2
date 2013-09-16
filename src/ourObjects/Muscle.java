@@ -12,15 +12,6 @@ public class Muscle extends Spring {
 		myAmplitude = amp;
 	}
 	
-	public void initRestLength(double restLength) {
-		if (mySteps != 0) {
-			throw new Error("initRestLength() may only " +
-					"be called before motion takes place!");
-		}
-		myInitialRestLength = restLength;
-		super.setRestLength(restLength);
-	}
-		
 	@Override
 	public void move() {
 		doHarmonicMotion();
