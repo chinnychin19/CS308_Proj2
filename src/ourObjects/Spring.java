@@ -12,6 +12,8 @@ public class Spring extends PhysicalObject {
 		super(animId, Constants.CID_SPRING, Constants.SPRING_COLOR);
 		myRestLength = distance(m1.getX(), m1.getY(), m2.getX(), m2.getY());
 		myConstant = Constants.DEFAULT_SPRING_CONSTANT;
+		myMass1 = m1;
+		myMass2 = m2;
 	}
 	public void setRestLength(double restLength) {
 		myRestLength = restLength;

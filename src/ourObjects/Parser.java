@@ -37,7 +37,8 @@ public class Parser {
 	
 	private void attachSpringsToMasses() {
 		for (Spring spr: springList) {
-			spr.getMass1().getSprings().add(spr);
+			Mass m1 = spr.getMass1();
+			m1.getSprings().add(spr);
 			spr.getMass2().getSprings().add(spr);
 		}
 	}
@@ -103,8 +104,6 @@ public class Parser {
 					theMuscle.setAmplitude(amplitude);
 					springList.add(theMuscle);
 				}
-			} else if(nodeType.equals(ID_SPRING) || nodeType.equals(ID_MUSCLE)) {
-				
 			}
 		}
 	}
