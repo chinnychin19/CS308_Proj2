@@ -31,11 +31,13 @@ public class OurWorld extends World {
 	public void setSprings(Collection<Spring> springs) {
 		springList = springs;
 	}
-	
-	public void applyForces() {
+	public void print(Object o) {
+		System.out.println(o.toString());
+	}
+	public void applyForces() {		
 		//gravity
 		for (Mass m: massList) {
-			m.getBody().applyForce(getGravity(), m.getBody().getPosition());
+			m.getBody().applyForce(new Vec2(0, 100), m.getBody().getPosition());
 		}
 		
 		//viscosity

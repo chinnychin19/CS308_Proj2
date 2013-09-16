@@ -50,7 +50,6 @@ public class Springies extends JGEngine
 		
 		Parser p = new Parser();
 		p.parseXML("assets/example.xml");
-		WorldManager.getWorld().setGravity(new Vec2(0, 10000));
 		WorldManager.getWorld().setMasses(p.getMassList());
 		WorldManager.getWorld().setSprings(p.getSpringList());
 		
@@ -60,13 +59,13 @@ public class Springies extends JGEngine
 		final double WALL_THICKNESS = 10;
 		final double WALL_WIDTH = displayWidth() - WALL_MARGIN*2 + WALL_THICKNESS;
 		final double WALL_HEIGHT = displayHeight() - WALL_MARGIN*2 + WALL_THICKNESS;
-		PhysicalObject wall = new PhysicalObjectRect( "wall", 2, JGColor.green, WALL_WIDTH, WALL_THICKNESS );
+		PhysicalObject wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_WIDTH, WALL_THICKNESS );
 		wall.setPos( displayWidth()/2, WALL_MARGIN );
-		wall = new PhysicalObjectRect( "wall", 2, JGColor.green, WALL_WIDTH, WALL_THICKNESS );
+		wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_WIDTH, WALL_THICKNESS );
 		wall.setPos( displayWidth()/2, displayHeight() - WALL_MARGIN );
-		wall = new PhysicalObjectRect( "wall", 2, JGColor.green, WALL_THICKNESS, WALL_HEIGHT );
+		wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_THICKNESS, WALL_HEIGHT );
 		wall.setPos( WALL_MARGIN, displayHeight()/2 );
-		wall = new PhysicalObjectRect( "wall", 2, JGColor.green, WALL_THICKNESS, WALL_HEIGHT );
+		wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_THICKNESS, WALL_HEIGHT );
 		wall.setPos( displayWidth() - WALL_MARGIN, displayHeight()/2 );
 	}
 	

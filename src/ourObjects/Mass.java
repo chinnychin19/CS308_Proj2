@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jbox2d.collision.CircleDef;
+import org.jbox2d.common.Vec2;
 
 import jboxGlue.PhysicalObject;
 import jboxGlue.PhysicalObjectCircle;
@@ -11,41 +12,11 @@ import jgame.JGColor;
 import jgame.JGObject;
 
 public class Mass extends PhysicalObjectCircle {
-	private double myX, myY;
-	private double myXSpeed, myYSpeed;
-	private double myMass, myRadius;
-	private int myCID;
-	private List<Spring> mySprings;
 
-	public Mass(String animId, double x, double y) {
-		super(animId, Constants.CID_MASS, Constants.MASS_COLOR, Constants.MASS_RADIUS);
-		myX = x;
-		myY = y;
-		myXSpeed = 0;
-		myYSpeed = 0;
-		myMass = 0; //fixed mass
-		myRadius = Constants.MASS_RADIUS;
-		mySprings = new ArrayList<Spring>();
-	}
-	
-	public double getX() {
-		return myX;
-	}
-	
-	public double getY() {
-		return myY;
-	}
-	
-	public void setMass(double m) {
-		myMass = m;
-	}
-	
-	@Override
-	public void move() {
-		this.x = myX;
-		this.y = myY;
-		this.xspeed = myXSpeed;
-		this.yspeed = myYSpeed;
+	public Mass(String animId, double x, double y, double mass) {
+		super(animId, Constants.CID_MASS, Constants.MASS_COLOR, Constants.MASS_RADIUS, mass);
+		setPos(x, y);
+		getBody().setLinearVelocity(new Vec2(0, 0));
 	}
 	
 	@Override
@@ -53,29 +24,18 @@ public class Mass extends PhysicalObjectCircle {
 		//do nothing
 	}
 	
+	public double getX() {
+		return getBody().getPosition().x;
+	}
+	
+	public double getY() {
+		return getBody().getPosition().y;
+	}
+	
 	@Override
 	public void paintShape() {
 		myEngine.setColor( myColor );
-		myEngine.drawOval( myX, myY, myRadius*2, myRadius*2, true, true );
-	}
-	
-	public List<Spring> getSprings() {
-		return mySprings;
-	}
-	
-	public void setXSpeed(double xs) {
-		myXSpeed = xs;
-	}
-	
-	public void setYSpeed(double ys) {
-		myYSpeed = ys;
-	}
-	
-	public double getXSpeed() {
-		return myXSpeed;
-	}
-	
-	public double getYSpeed() {
-		return myYSpeed;
+		myEngine.drawOval( getBody().getPosition().x, getBody().getPosition().y, 
+				Constants.MASS_RADIUS*2, Constants.MASS_RADIUS*2, true, true );
 	}
 }
