@@ -28,6 +28,14 @@ public class Spring extends PhysicalObject {
 		return distance(myMass1.getX(), myMass1.getY(), myMass2.getX(), myMass2.getY());
 	}
 	
+	public Mass getMass1() {
+		return myMass1;
+	}
+	
+	public Mass getMass2() {
+		return myMass2;
+	}
+	
 	public Vec2 getForce(Mass m) {
 		Mass otherMass = (m == myMass1 ? myMass2 : myMass1);
 		

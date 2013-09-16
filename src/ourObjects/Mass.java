@@ -1,5 +1,6 @@
 package ourObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jboxGlue.PhysicalObject;
@@ -20,6 +21,7 @@ public class Mass extends PhysicalObject {
 		myXSpeed = 0;
 		myYSpeed = 0;
 		myMass = 0; //fixed mass
+		mySprings = new ArrayList<Spring>();
 	}
 	
 	public double getX() {
@@ -53,9 +55,5 @@ public class Mass extends PhysicalObject {
 	
 	public List<Spring> getSprings() {
 		return mySprings;
-	}
-	
-	public void setSprings(List<Spring> springs) {
-		mySprings = springs;
 	}
 }
