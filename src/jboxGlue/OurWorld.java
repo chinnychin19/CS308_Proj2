@@ -17,11 +17,25 @@ import ourObjects.Spring;
 public class OurWorld extends World {
 	private Collection<Mass> massList;
 	private Collection<Spring> springList;
+	private double viscosity = 1, centerOfMass = 0;
+	private Vec2 gravity = new Vec2(0,0);
 	
 	public OurWorld(AABB worldBounds, Vec2 gravity, boolean doSleep) {
 		super(worldBounds, gravity, doSleep);
 		massList = new ArrayList<Mass>();
 		springList = new ArrayList<Spring>();
+	}
+	
+	public void setGravity(Vec2 g) {
+		gravity = g;
+	}
+	
+	public void setViscosity(double v) {
+		viscosity = v;
+	}
+	
+	public void setCenterOfMass(double c) {
+		centerOfMass = c;
 	}
 	
 	public void setMasses(Collection<Mass> masses) {
@@ -34,13 +48,29 @@ public class OurWorld extends World {
 	public void print(Object o) {
 		System.out.println(o.toString());
 	}
-	public void applyForces() {		
+	
+	//F = m * a, so multiply gravity by mass
+	private Vec2 forceOfGravity(Mass m) {
+		float mass = m.getBody().getMass();
+		return new Vec2(gravity.x * mass, gravity.y * mass);
+	}
+	
+	public void applyForces() {
 		//gravity
 		for (Mass m: massList) {
-			m.getBody().applyForce(new Vec2(0, 100), m.getBody().getPosition());
+			m.getBody().applyForce(forceOfGravity(m), m.getBody().getPosition());
 		}
 		
 		//viscosity
+		for (Mass m: massList) {
+			Vec2 dir = m.getBody().getLinearVelocity();
+			System.out.println(dir);
+			Vec2 oppDir = dir.negate(); //returns the negative vector
+			float newX = (float) (1000*oppDir.x * (1-viscosity));
+			float newY = (float) (1000*oppDir.y * (1-viscosity));
+			m.getBody().applyForce(new Vec2(newX, newY), 
+					m.getBody().getPosition()); //proportional to speed
+		}
 		
 		//center of mass
 		

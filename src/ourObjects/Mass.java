@@ -19,11 +19,6 @@ public class Mass extends PhysicalObjectCircle {
 		getBody().setLinearVelocity(new Vec2(0, 0));
 	}
 	
-	@Override
-	public void hit(JGObject obj) {
-		//do nothing
-	}
-	
 	public double getX() {
 		return getBody().getPosition().x;
 	}
@@ -37,5 +32,27 @@ public class Mass extends PhysicalObjectCircle {
 		myEngine.setColor( myColor );
 		myEngine.drawOval( getBody().getPosition().x, getBody().getPosition().y, 
 				Constants.MASS_RADIUS*2, Constants.MASS_RADIUS*2, true, true );
+	}
+	
+	@Override
+	public void hit( JGObject other )
+	{
+		// we hit something! bounce off it!
+		Vec2 velocity = myBody.getLinearVelocity();
+		
+		// is it a tall wall?
+		final double DAMPING_FACTOR = Constants.DAMPING_FACTOR;
+		boolean isSide = other.getBBox().height > other.getBBox().width;
+		if( isSide )
+		{
+			velocity.x *= -DAMPING_FACTOR;
+		}
+		else
+		{
+			velocity.y *= -DAMPING_FACTOR;
+		}
+		
+		// apply the change
+		myBody.setLinearVelocity( velocity );
 	}
 }

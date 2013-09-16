@@ -39,6 +39,7 @@ public class PhysicalObjectCircle extends PhysicalObject
 		CircleDef shape = new CircleDef();
 		shape.radius = (float)radius;
 		shape.density = (float)mass;
+		shape.filter.groupIndex = -1; //Masses won't collide with each other
 		createBody( shape );
 		setBBox( -(int)radius, -(int)radius, 2*(int)radius, 2*(int)radius );
 	}

@@ -11,6 +11,7 @@ public interface Constants {
 	public static final double MASS_RADIUS = 10;
 	public static final double MASS_DEFAULT_MASS = 5;
 	public static final JGColor MASS_COLOR = JGColor.cyan, SPRING_COLOR = JGColor.orange;
-	public static final double DEFAULT_SPRING_CONSTANT = 0;
+	public static final double DEFAULT_SPRING_CONSTANT = 1;
+	public static final double DAMPING_FACTOR = .8;
 
 }

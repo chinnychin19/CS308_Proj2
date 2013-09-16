@@ -3,6 +3,7 @@ package ourObjects;
 import org.jbox2d.common.Vec2;
 
 import jboxGlue.PhysicalObject;
+import jboxGlue.UnitVectors;
 
 public class Spring extends PhysicalObject {
 	private double myRestLength, myConstant;
@@ -38,16 +39,35 @@ public class Spring extends PhysicalObject {
 		return myMass2;
 	}
 	
-	public Vec2 getForce(Mass m) {
-		Mass otherMass = (m == myMass1 ? myMass2 : myMass1);
+//	public Vec2 getForce(Mass m) {
+//		Mass otherMass = (m == myMass1 ? myMass2 : myMass1);
+//		
+//		float unitVectorX = (float) ((otherMass.getX()-m.getX())/getCurLength());
+//		float unitVectorY = (float) ((otherMass.getX()-m.getX())/getCurLength());
+//		
+//		float springForce = (float) ((getCurLength()-myRestLength) * myConstant);
+//		
+//		return new Vec2(unitVectorX * springForce, unitVectorY * springForce);
+//		// F = k*x, positive means spring is longer that restLength 
+//	}
+	
+	public void move() {
+		applyForce();
+	}
+	
+	private void applyForce() {
+		//Unit vector pointing from m1 to m2
+		Vec2 uVec = UnitVectors.unitVector(myMass1.getBody().getPosition(), 
+				myMass2.getBody().getPosition());
 		
-		float unitVectorX = (float) ((otherMass.getX()-m.getX())/getCurLength());
-		float unitVectorY = (float) ((otherMass.getX()-m.getX())/getCurLength());
+		//Force is positive if contracting
+		float force = (float) ((getCurLength()-myRestLength) * myConstant);
+//		System.out.println("force: "+force);
 		
-		float springForce = (float) ((getCurLength()-myRestLength) * myConstant);
-		
-		return new Vec2(unitVectorX * springForce, unitVectorY * springForce);
-		// F = k*x, positive means spring is longer that restLength 
+		myMass1.getBody().applyForce(new Vec2(uVec.x * force, uVec.y * force), 
+				myMass1.getBody().getPosition());
+		myMass2.getBody().applyForce(new Vec2(-uVec.x * force, -uVec.y * force), 
+				myMass2.getBody().getPosition());
 	}
 		
 	@Override
