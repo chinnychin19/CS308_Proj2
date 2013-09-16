@@ -14,10 +14,12 @@ import org.jbox2d.dynamics.World;
 import ourObjects.Constants;
 import ourObjects.Mass;
 import ourObjects.Spring;
+import ourObjects.Wall;
 
 public class OurWorld extends World {
 	private Collection<Mass> massList;
 	private Collection<Spring> springList;
+	private Collection<Wall> wallList;
 	private double viscosity = 0, com_magnitude = 1000, com_exponent = 2;
 	private Vec2 gravity = new Vec2(0,0);
 	
@@ -47,6 +49,11 @@ public class OurWorld extends World {
 	public void setSprings(Collection<Spring> springs) {
 		springList = springs;
 	}
+	
+	public void setWalls(Collection<Wall> walls) {
+		wallList = walls;
+	}
+	
 	public void print(Object o) {
 		System.out.println(o.toString());
 	}
@@ -54,14 +61,14 @@ public class OurWorld extends World {
 	//F = m * a, so multiply gravity by mass
 	private Vec2 forceOfGravity(Mass m) {
 		float mass = m.getBody().getMass();
-		return new Vec2(gravity.x * mass, gravity.y * mass);
+		return new Vec2(gravity.x * mass * Constants.GRAVITY_MULTIPLIER, gravity.y * mass * Constants.GRAVITY_MULTIPLIER);
 	}
 	
 	public void applyForces() {
 		applyGravity();
 		applyViscosity();
-		applyCenterOfMass();		
-		//TODO:wall repulsion done inside of wall
+		applyCenterOfMass();
+		applyWallRepulsion();
 	}
 	
 	private void applyCenterOfMass() {
@@ -105,5 +112,37 @@ public class OurWorld extends World {
 			m.getBody().applyForce(vForce, 
 					m.getBody().getPosition()); //proportional to speed
 		}
+	}
+	
+	private void applyWallRepulsion() {
+		for(Mass m: massList){
+			float xComp = 0;
+			float yComp = 0;
+			for(Wall w: wallList){
+				if(w.isVertical()){
+					xComp += wallRepulsionForce(m,w);
+				}
+				else {
+					yComp += wallRepulsionForce(m,w);
+				}
+			}
+			m.getBody().applyForce(new Vec2(xComp, yComp), m.getBody().getPosition());
+		}
+	}
+	
+	private float wallRepulsionForce(Mass m, Wall w) { 
+		float dist;
+		int sign;
+		
+		if(w.isVertical()){
+			dist = Math.abs(w.getBody().getPosition().x - m.getBody().getPosition().x);
+			sign = (w.getBody().getPosition().x < m.getBody().getPosition().x ? 1 : -1);
+		}
+		else {
+			dist = Math.abs(w.getBody().getPosition().y - m.getBody().getPosition().y);
+			sign = (w.getBody().getPosition().y < m.getBody().getPosition().y ? 1 : -1);
+		}
+		
+		return (float) (sign*Constants.WALL_MULTIPLIER*Math.pow(1/dist, w.getExponent()) * w.getMagnitude());
 	}
 }

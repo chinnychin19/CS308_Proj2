@@ -1,0 +1,14 @@
+<model>
+    <name>Dainty Walker</name>
+    <author>Ed Burton</author>
+
+    <nodes>
+        <mass id="m0" x="100" y="75" vx="-0.8951623" vy="-0.45419145"/>
+        <mass id="m1" x="200" y="75" vx="-0.7782596" vy="-0.05345259"/>
+
+    </nodes>
+
+    <links>
+        <muscle a="m0" b="m1" restlength="75" amplitude="70"/>
+    </links>
+</model>

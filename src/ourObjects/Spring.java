@@ -31,6 +31,10 @@ public class Spring extends PhysicalObject {
 		return distance(myMass1.getX(), myMass1.getY(), myMass2.getX(), myMass2.getY());
 	}
 	
+	public double getRestLength() {
+		return myRestLength;
+	}
+	
 	public Mass getMass1() {
 		return myMass1;
 	}

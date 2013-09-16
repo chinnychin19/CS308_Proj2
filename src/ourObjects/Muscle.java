@@ -15,12 +15,16 @@ public class Muscle extends Spring {
 	@Override
 	public void move() {
 		doHarmonicMotion();
+		super.move();
+	}
+	
+	public void setInitialRestLength(double restLength) {
+		myInitialRestLength = restLength;
 	}
 	
 	private void doHarmonicMotion() {
 		mySteps++;
-		double freq = 0.005;
 		setRestLength(myInitialRestLength + myAmplitude * 
-				Math.sin(2 * Math.PI * freq * mySteps));
+				Math.sin(2 * Math.PI * Constants.MUSCLE_FREQUENCY * mySteps));
 	}
 }

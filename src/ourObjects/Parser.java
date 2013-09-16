@@ -25,7 +25,7 @@ public class Parser {
 	private static final String ID_MASS = "mass", ID_FIXED = "fixed", 
 			ID_SPRING = "spring", ID_MUSCLE = "muscle", ID_WALL = "wall"; 
 
-	public void parseXML(String path) { //nodes are masses and fixed masses
+	public void parseObjects(String path) { //nodes are masses and fixed masses
 		try{
 			DOMParser parser = new DOMParser();
 			parser.parse(path);
@@ -35,6 +35,8 @@ public class Parser {
 			NodeList links = getNode("links", model).getChildNodes();
 			constructNodes(nodes);
 			constructLinks(links);
+			WorldManager.getWorld().setMasses(getMassList());
+			WorldManager.getWorld().setSprings(getSpringList());
 		}
 		catch(Exception e) {
 		    e.printStackTrace();
@@ -74,11 +76,30 @@ public class Parser {
 					double repelmag = Double.parseDouble(getNodeAttr("magnitude", curNode));
 					double exponent = Double.parseDouble(getNodeAttr("exponent", curNode));
 					
-					Wall wall = new Wall(id, viewWidth, viewHeight, repelmag, exponent);
+					Wall wall = null;
+					
+					if(id.equals(Constants.ID_TOP_WALL)) {
+						wall = new Wall(id, viewWidth, Constants.WALL_THICKNESS, repelmag, exponent);
+						wall.setPos(viewWidth/2, Constants.WALL_MARGIN);
+					}
+					else if(id.equals(Constants.ID_RIGHT_WALL)){
+						wall = new Wall(id, Constants.WALL_THICKNESS, viewHeight, repelmag, exponent);
+						wall.setPos(Constants.WALL_MARGIN, viewHeight/2);
+					}
+					else if(id.equals(Constants.ID_BOTTOM_WALL)) {
+						wall = new Wall(id, viewWidth, Constants.WALL_THICKNESS, repelmag, exponent);
+						wall.setPos(viewWidth/2, viewHeight-Constants.WALL_MARGIN);
+					}
+					else if(id.equals(Constants.ID_LEFT_WALL)){
+						wall = new Wall(id, Constants.WALL_THICKNESS, viewHeight, repelmag, exponent);
+						wall.setPos(viewWidth-Constants.WALL_MARGIN, viewHeight/2);
+					}
+					
+					wallList.add(wall);
 				}
 			}
 			
-			
+			WorldManager.getWorld().setWalls(wallList);
 			
 		}
 		catch(Exception e) {
@@ -149,7 +170,8 @@ public class Parser {
 					theSpring.setConstant(constant);
 					springList.add(theSpring);
 				} else if (nodeType.equals(Parser.ID_MUSCLE)) {
-					Muscle theMuscle = new Muscle("", m2, m2);
+					Muscle theMuscle = new Muscle("", m1, m2);
+					theMuscle.setInitialRestLength(Math.sqrt(Math.pow(m2.getX() - m1.getX(), 2) + Math.pow(m2.getY() - m1.getY(), 2)));
 					theMuscle.setConstant(constant);
 					theMuscle.setAmplitude(amplitude);
 					springList.add(theMuscle);

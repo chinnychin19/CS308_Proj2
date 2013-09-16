@@ -49,26 +49,8 @@ public class Springies extends JGEngine
 		WorldManager.initWorld( this );
 		
 		Parser p = new Parser();
-		p.parseEnvironment("assets/environment.xml", viewWidth(), viewHeight());
-		p.parseXML("assets/example.xml");
-		WorldManager.getWorld().setMasses(p.getMassList());
-		WorldManager.getWorld().setSprings(p.getSpringList());
-		WorldManager.getWorld().setGravity(new Vec2(0, .05f));
-		
-		// add walls to bounce off of
-		// NOTE: immovable objects must have no mass
-		final double WALL_MARGIN = 10;
-		final double WALL_THICKNESS = 10;
-		final double WALL_WIDTH = displayWidth() - WALL_MARGIN*2 + WALL_THICKNESS;
-		final double WALL_HEIGHT = displayHeight() - WALL_MARGIN*2 + WALL_THICKNESS;
-//		PhysicalObject wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_WIDTH, WALL_THICKNESS );
-//		wall.setPos( displayWidth()/2, WALL_MARGIN );
-		PhysicalObject wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_WIDTH, WALL_THICKNESS );
-		wall.setPos( displayWidth()/2, displayHeight() - WALL_MARGIN );
-		wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_THICKNESS, WALL_HEIGHT );
-		wall.setPos( WALL_MARGIN, displayHeight()/2 );
-		wall = new PhysicalObjectRect( "wall", 32, JGColor.green, WALL_THICKNESS, WALL_HEIGHT );
-		wall.setPos( displayWidth() - WALL_MARGIN, displayHeight()/2 );
+		p.parseEnvironment("assets/environment.xml", displayWidth(), displayHeight());
+		p.parseObjects("assets/daintywalker.xml");
 	}
 	
 	@Override
