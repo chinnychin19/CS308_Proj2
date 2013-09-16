@@ -23,16 +23,25 @@ public class MovingMass extends Mass {
 
 	@Override
 	public void move() {
-		// Move masses based on the forces applied to them. (Spring, Wall Repulsion, and Viscous Drag)
+		// Move masses based on the forces applied to them. (Spring, Wall Repulsion, Center of Gravity (?) and Viscous Drag)
+		// Note: Gravity *should* already be handled by the World (?)
 		// Find net force in X and Y directions, then apply the net force to the object
 		
 		Vec2 netForce = new Vec2();
 		
+		// Spring Forces
 		List<Spring> springs = getSprings();
 		for(Spring spring : springs) {
 			netForce = netForce.add(spring.getForce(this));
 		}
 		
+		// Wall Repulsion
+		
+		// Center of Gravity
+		
+		// Viscous Drag
+		
+		// Return Net of All forces
 		this.setForce(netForce);
 	}
 
