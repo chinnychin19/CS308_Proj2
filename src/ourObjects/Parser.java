@@ -1,181 +1,113 @@
 package ourObjects;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-
-import jboxGlue.*;
-import jgame.JGColor;
-import jgame.platform.JGEngine;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class Parser {
 
-	private String myPath;
-	private Map<String, Mass> Masses = new HashMap<String, Mass>();
-	private Map<String, Spring> Springs = new HashMap<String, Spring>();
+	private Map<String, Mass> massMap = new HashMap<String, Mass>();
+	private List<Spring> springList = new LinkedList<Spring>();
+	private static final String ID_MASS = "mass", ID_FIXED = "fixed", 
+			ID_SPRING = "spring", ID_MUSCLE = "muscle"; 
 
-	public Parser(String path) {
-		myPath = path;
+	public void parseXML(String path) { //nodes are masses and fixed masses
+		try{
+			DOMParser parser = new DOMParser();
+			parser.parse(path);
+			NodeList root = parser.getDocument().getChildNodes();
+			NodeList model = getNode("model", root).getChildNodes();
+			NodeList nodes = getNode("nodes", model).getChildNodes();
+			NodeList links = getNode("links", model).getChildNodes();
+			constructNodes(nodes);
+			constructLinks(links);
+			attachSpringsToMasses();
+		}
+		catch(Exception e) {
+		    e.printStackTrace();
+		}
 	}
 	
-	public void parseAndGenerateMasses(String tag) {
-		try{
-			DOMParser parser = new DOMParser();
-			parser.parse(myPath);
-			Document doc = parser.getDocument();
-
-			NodeList masses = doc.getElementsByTagName(tag);
-
-			// Gets Mass objects and constructs them
-			for(int i=0; i<masses.getLength(); i++) {
-					// Movable Masses
-					String id = getNodeAttr("id", masses.item(i));
-					Double x = Double.parseDouble(getNodeAttr("x", masses.item(i)));
-					Double y = Double.parseDouble(getNodeAttr("y", masses.item(i)));
-					Double vx = Double.parseDouble(getNodeAttr("vx", masses.item(i)));
-					Double vy = Double.parseDouble(getNodeAttr("vy", masses.item(i)));
-
-					Mass mass = new MovingMass(id, x, y, vx, vy);
-					Masses.put(id, mass);
-					
-			}
-			
-		}
-		catch(Exception e) {
-		    e.printStackTrace();
+	private void attachSpringsToMasses() {
+		for (Spring spr: springList) {
+			spr.getMass1().getSprings().add(spr);
+			spr.getMass2().getSprings().add(spr);
 		}
 	}
 
-	public void parseAndGenerateFixedMasses() {
-		try{
-			DOMParser parser = new DOMParser();
-			parser.parse(myPath);
-			Document doc = parser.getDocument();
-
-			// Gets root of XML
-			NodeList root = doc.getChildNodes();
-
-			// Gets model level nodes
-			Node model = getNode("model", root);
-			NodeList modelChildren = model.getChildNodes();
+	private void constructNodes(NodeList nodes) {
+		for(int i=0; i<nodes.getLength(); i++) {
+			Node curNode = nodes.item(i);
+			String nodeType = curNode.getNodeName(); //fixed or mass
 			
-			// Gets Nodes
-			Node nodes = getNode("nodes", modelChildren);
-			NodeList nodeChildren = nodes.getChildNodes();
-
-			// Gets Mass objects and constructs them
-			for(int i=0; i<nodeChildren.getLength(); i++) {
-				if(nodeChildren.item(i).getNodeName().equalsIgnoreCase("fixed")) {
-					// Fixed Masses
-					String id = getNodeAttr("id", nodeChildren.item(i));
-					double x = Double.parseDouble(getNodeAttr("x", nodeChildren.item(i)));
-					double y = Double.parseDouble(getNodeAttr("y", nodeChildren.item(i)));
-
-					Mass mass = new Mass(id, x, y);
-
-					Masses.put(id, mass);
-				}
-			}			
-		}
-		catch(Exception e) {
-		    e.printStackTrace();
-		}
-	}
-
-	public void parseAndGenerateSprings() {
-		try{
-			DOMParser parser = new DOMParser();
-			parser.parse(myPath);
-			Document doc = parser.getDocument();
-
-			// Gets root of XML
-			NodeList root = doc.getChildNodes();
-
-			// Gets model level nodes
-			Node model = getNode("model", root);
-			NodeList modelChildren = model.getChildNodes();
-			
-			// Gets Links
-			Node links = getNode("links", modelChildren);
-			NodeList linkChildren = links.getChildNodes();
-
-			// Gets spring and muscle objects and constructs them
-			Springs = new HashMap<String, Spring>();
-			int springNum = 0;
-			for(int i=0; i<linkChildren.getLength(); i++) {
-				if(linkChildren.item(i).getNodeName().equalsIgnoreCase("spring")) {
-					// Springs
-					springNum++;
-					Mass mass1 = Masses.get(getNodeAttr("a", linkChildren.item(i)));
-					Mass mass2 = Masses.get(getNodeAttr("b", linkChildren.item(i)));
-
-					// check restLength exists?
-					Double restLength = Double.parseDouble(getNodeAttr("restlength", linkChildren.item(i)));
-					// check constant exists?
-					Double constant = Double.parseDouble(getNodeAttr("constant", linkChildren.item(i)));
-
-					Spring spring = new Spring("spring"+springNum, mass1, mass2);
-					// need to get masses out of engine with objectID
-					Springs.put("spring"+springNum,spring);
-				}
-			}	
-		}
-		catch ( Exception e ) {
-		    e.printStackTrace();
-		}
-	}
-
-	public void parseAndGenerateMuscles() {
-		try{
-			DOMParser parser = new DOMParser();
-			parser.parse(myPath);
-			Document doc = parser.getDocument();
-
-			// Gets root of XML
-			NodeList root = doc.getChildNodes();
-
-			// Gets model level nodes
-			Node model = getNode("model", root);
-			NodeList modelChildren = model.getChildNodes();
-			
-			// Gets Links
-			Node links = getNode("links", modelChildren);
-			NodeList linkChildren = links.getChildNodes();
-
-			// Gets spring and muscle objects and constructs them
-			int muscleNum = 0;
-			for(int i=0; i<linkChildren.getLength(); i++) {
-				if(linkChildren.item(i).getNodeName().equalsIgnoreCase("muscle")) {
-					// Muscles
-					muscleNum++;
-					Mass mass1 = Masses.get(getNodeAttr("a", linkChildren.item(i)));
-					Mass mass2 = Masses.get(getNodeAttr("b", linkChildren.item(i)));
-
-					// check restLength exists?
-					Double restLength = Double.parseDouble(getNodeAttr("restlength", linkChildren.item(i)));
-					// check constant exists?
-					Double constant = Double.parseDouble(getNodeAttr("constant", linkChildren.item(i)));
-					// check amplitude exists?
-					Double amplitude = Double.parseDouble(getNodeAttr("amplitude", linkChildren.item(i)));
-
-					Muscle muscle = new Muscle("muscle"+muscleNum, mass1, mass2);
-					// need to get masses out of engine with objectID
-					Springs.put("muscle"+muscleNum,muscle);
+			if (nodeType.equals(ID_MASS) || nodeType.equals(ID_FIXED)) {
+				//Required fields
+				String id = getNodeAttr("id", curNode);
+				double x = Double.parseDouble(getNodeAttr("x", curNode));
+				double y = Double.parseDouble(getNodeAttr("y", curNode));
+				
+				//Optional fields
+				String strVX = getNodeAttr("vx", curNode);
+				double vx = strVX.isEmpty() ? 0 : Double.parseDouble(strVX);
+				String strVY = getNodeAttr("vy", curNode);
+				double vy = strVY.isEmpty() ? 0 : Double.parseDouble(strVY);
+				String strMass = getNodeAttr("mass", curNode);
+				//If mass is not provided: return 0 if fixed, else default_mass if mass
+				double mass = strMass.isEmpty() ? 
+						(nodeType.equals(Parser.ID_MASS) ? Constants.MASS_DEFAULT_MASS : 0) : 
+						Double.parseDouble(strMass);
+				
+				if (nodeType.equals(Parser.ID_FIXED)) {
+					massMap.put(id, new Mass("", x, y));
+				} else /*if (nodeType.equals(Parser.ID_MASS))*/ {
+					massMap.put(id, new MovingMass("", x, y, vx, vy, mass));
 				}
 			}
-			
-		}
-		catch ( Exception e ) {
-		    e.printStackTrace();
 		}
 	}
 
+	private void constructLinks(NodeList links) {
+		for(int i=0; i<links.getLength(); i++) {
+			Node curNode = links.item(i);
+			String nodeType = curNode.getNodeName(); //fixed or mass
+			
+			if (nodeType.equals(ID_SPRING) || nodeType.equals(ID_MUSCLE)) {
+				//Required fields
+				Mass m1 = massMap.get(getNodeAttr("a", curNode));
+				Mass m2 = massMap.get(getNodeAttr("b", curNode));
+				
+				//Optional fields
+				String strRestLength = getNodeAttr("restLength", curNode);
+				double restLength = strRestLength.isEmpty() ? 0 : Double.parseDouble(strRestLength);
+				String strConstant = getNodeAttr("constant", curNode);
+				double constant = strConstant.isEmpty() ? 0 : Double.parseDouble(strConstant);
+				String strAmplitude = getNodeAttr("amplitude", curNode);
+				double amplitude = strAmplitude.isEmpty() ? 0 : Double.parseDouble(strAmplitude);
+				
+				if (nodeType.equals(Parser.ID_SPRING)) {
+					Spring theSpring = new Spring("", m1, m2);
+					theSpring.setRestLength(restLength);
+					theSpring.setConstant(constant);
+					springList.add(theSpring);
+				} else if (nodeType.equals(Parser.ID_MUSCLE)) {
+					Muscle theMuscle = new Muscle("", m2, m2);
+					theMuscle.setRestLength(restLength);
+					theMuscle.setConstant(constant);
+					theMuscle.setAmplitude(amplitude);
+					springList.add(theMuscle);
+				}
+			} else if(nodeType.equals(ID_SPRING) || nodeType.equals(ID_MUSCLE)) {
+				
+			}
+		}
+	}
 
 	/**
 	*	Helper Methods for XML Parsing
