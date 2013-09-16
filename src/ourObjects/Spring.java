@@ -1,5 +1,7 @@
 package ourObjects;
 
+import org.jbox2d.common.Vec2;
+
 import jboxGlue.PhysicalObject;
 
 public class Spring extends PhysicalObject {
@@ -26,8 +28,15 @@ public class Spring extends PhysicalObject {
 		return distance(myMass1.getX(), myMass1.getY(), myMass2.getX(), myMass2.getY());
 	}
 	
-	public double getForce() {
-		return (getCurLength()-myRestLength) * myConstant;
+	public Vec2 getForce(Mass m) {
+		Mass otherMass = (m == myMass1 ? myMass2 : myMass1);
+		
+		float unitVectorX = (float) ((otherMass.getX()-m.getX())/getCurLength());
+		float unitVectorY = (float) ((otherMass.getX()-m.getX())/getCurLength());
+		
+		float springForce = (float) ((getCurLength()-myRestLength) * myConstant);
+		
+		return new Vec2(unitVectorX * springForce, unitVectorY * springForce);
 		// F = k*x, positive means spring is longer that restLength 
 	}
 	

@@ -51,6 +51,10 @@ public class Mass extends PhysicalObject {
 				Constants.MASS_RADIUS*2, true, true );
 	}
 	
+	public List<Spring> getSprings() {
+		return mySprings;
+	}
+	
 	public void setSprings(List<Spring> springs) {
 		mySprings = springs;
 	}

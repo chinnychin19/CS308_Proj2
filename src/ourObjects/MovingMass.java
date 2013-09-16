@@ -2,6 +2,8 @@ package ourObjects;
 
 import java.util.List;
 
+import org.jbox2d.common.Vec2;
+
 import jboxGlue.PhysicalObject;
 import jgame.JGColor;
 import jgame.JGObject;
@@ -22,7 +24,16 @@ public class MovingMass extends Mass {
 	@Override
 	public void move() {
 		// Move masses based on the forces applied to them. (Spring, Wall Repulsion, and Viscous Drag)
-		// Find net force in X and Y directions, then apply the net force to the object 
+		// Find net force in X and Y directions, then apply the net force to the object
+		
+		Vec2 netForce = new Vec2();
+		
+		List<Spring> springs = getSprings();
+		for(Spring spring : springs) {
+			netForce = netForce.add(spring.getForce(this));
+		}
+		
+		this.setForce(netForce);
 	}
 
 	@Override
