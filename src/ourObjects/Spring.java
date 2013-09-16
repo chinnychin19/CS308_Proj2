@@ -53,6 +53,7 @@ public class Spring extends PhysicalObject {
 	@Override
 	public void move() {
 		//do nothing
+//		myMass1.getBody().applyForce(new Vec2(1,1), myMass1.getBody().getPosition());
 	}
 	
 	@Override

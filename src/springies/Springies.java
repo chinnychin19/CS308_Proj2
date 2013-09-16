@@ -47,16 +47,12 @@ public class Springies extends JGEngine
 		// so gravity is along the positive y axis in world coords to point down in game coords
 		// remember to set all directions (eg forces, velocities) in world coords
 		WorldManager.initWorld( this );
-		WorldManager.getWorld().setGravity( new Vec2( 0.0f, 0.1f ) );
 		
-		// add a bouncy ball
-		// NOTE: you could make this into a separate class, but I'm lazy
-		PhysicalObject ball = new BouncyBall();
-		ball.setPos( displayWidth()/2, displayHeight()/2 );
-		ball.setForce( 8000, -10000 );
-
 		Parser p = new Parser();
-		p.parseXML("xml/example.xml");
+		p.parseXML("assets/example.xml");
+		WorldManager.getWorld().setGravity(new Vec2(0, 10000));
+		WorldManager.getWorld().setMasses(p.getMassList());
+		WorldManager.getWorld().setSprings(p.getSpringList());
 		
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
@@ -79,6 +75,7 @@ public class Springies extends JGEngine
 	{
 		// update game objects
 		WorldManager.getWorld().step( 1f, 1 );
+		WorldManager.getWorld().applyForces();
 		moveObjects();
 		
 		checkCollision( 1 + 2, 1 );

@@ -8,14 +8,14 @@ import org.jbox2d.dynamics.World;
 
 public class WorldManager
 {
-	public static World ourWorld;
+	public static OurWorld ourWorld;
 	
 	static
 	{
 		ourWorld = null;
 	}
 	
-	public static World getWorld( )
+	public static OurWorld getWorld( )
 	{
 		// make sure we have a world, just in case...
 		if( ourWorld == null )
@@ -33,6 +33,6 @@ public class WorldManager
 			new Vec2( engine.displayWidth(), engine.displayHeight() )
 		);
 		Vec2 gravity = new Vec2( 0.0f, 0.0f );
-		ourWorld = new World( worldBounds, gravity, true );
+		ourWorld = new OurWorld( worldBounds, gravity, true );
 	}
 }

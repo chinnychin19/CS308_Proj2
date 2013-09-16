@@ -1,5 +1,7 @@
 package ourObjects;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +16,7 @@ import org.w3c.dom.NodeList;
 public class Parser {
 
 	private Map<String, Mass> massMap = new HashMap<String, Mass>();
-	private List<Spring> springList = new LinkedList<Spring>();
+	private List<Spring> springList = new ArrayList<Spring>();
 	private static final String ID_MASS = "mass", ID_FIXED = "fixed", 
 			ID_SPRING = "spring", ID_MUSCLE = "muscle"; 
 
@@ -33,6 +35,14 @@ public class Parser {
 		catch(Exception e) {
 		    e.printStackTrace();
 		}
+	}
+	
+	public Collection<Spring> getSpringList() {
+		return springList;
+	}
+	
+	public Collection<Mass> getMassList() {
+		return massMap.values();
 	}
 	
 	private void attachSpringsToMasses() {
