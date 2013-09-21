@@ -21,6 +21,10 @@ public class OurWorld extends World {
 	private Collection<Spring> springList;
 	private Collection<Wall> wallList;
 	private double viscosity = 0, com_magnitude = 1000, com_exponent = 2;
+	private float 	v_multiplier = Constants.VISCOSITY_MULTIPLIER,
+					g_multiplier = Constants.GRAVITY_MULTIPLIER,
+					m_multiplier = Constants.COM_MULTIPLIER,
+					w_multiplier = Constants.WALL_MULTIPLIER;
 	private Vec2 gravity = new Vec2(0,0);
 	
 	public OurWorld(AABB worldBounds, Vec2 gravity, boolean doSleep) {
@@ -31,6 +35,10 @@ public class OurWorld extends World {
 	
 	public void setGravity(Vec2 g) {
 		gravity = g;
+	}
+	
+	public Collection<Wall> getWalls() {
+		return wallList;
 	}
 	
 	public void setViscosity(double v) {
@@ -53,6 +61,38 @@ public class OurWorld extends World {
 	public void setWalls(Collection<Wall> walls) {
 		wallList = walls;
 	}
+
+	public void setCOMMultiplier(float multiplier) {
+		m_multiplier = multiplier;
+	}
+
+	public void setGravityMultiplier(float multiplier) {
+		g_multiplier = multiplier;
+	}
+
+	public void setViscosityMultiplier(float multiplier) {
+		v_multiplier = multiplier;
+	}
+
+	public void setWallMultiplier(float multiplier) {
+		w_multiplier = multiplier;
+	}
+	
+	public float getCOMMultiplier() {
+		return m_multiplier;
+	}
+
+	public float getGravityMultiplier() {
+		return g_multiplier;
+	}
+
+	public float getViscosityMultiplier() {
+		return v_multiplier;
+	}
+
+	public float getWallMultiplier() {
+		return w_multiplier;
+	}
 	
 	public void print(Object o) {
 		System.out.println(o.toString());
@@ -61,7 +101,7 @@ public class OurWorld extends World {
 	//F = m * a, so multiply gravity by mass
 	private Vec2 forceOfGravity(Mass m) {
 		float mass = m.getBody().getMass();
-		return new Vec2(gravity.x * mass * Constants.GRAVITY_MULTIPLIER, gravity.y * mass * Constants.GRAVITY_MULTIPLIER);
+		return new Vec2(gravity.x * mass * g_multiplier, gravity.y * mass * g_multiplier);
 	}
 	
 	public void applyForces() {
@@ -106,8 +146,8 @@ public class OurWorld extends World {
 		for (Mass m: massList) {
 			Vec2 dir = m.getBody().getLinearVelocity();
 			Vec2 oppDir = dir.negate(); //returns the negative vector
-			float newX = (float) (oppDir.x * viscosity * Constants.VISCOSITY_MULTIPLIER);
-			float newY = (float) (oppDir.y * viscosity * Constants.VISCOSITY_MULTIPLIER);
+			float newX = (float) (oppDir.x * viscosity * v_multiplier);
+			float newY = (float) (oppDir.y * viscosity * v_multiplier);
 			Vec2 vForce = new Vec2(newX, newY);
 			m.getBody().applyForce(vForce, 
 					m.getBody().getPosition()); //proportional to speed
@@ -120,10 +160,14 @@ public class OurWorld extends World {
 			float yComp = 0;
 			for(Wall w: wallList){
 				if(w.isVertical()){
-					xComp += wallRepulsionForce(m,w);
+					if(w.getActivity()){
+						xComp += wallRepulsionForce(m,w);
+					}
 				}
 				else {
-					yComp += wallRepulsionForce(m,w);
+					if(w.getActivity()){
+						yComp += wallRepulsionForce(m,w);
+					}
 				}
 			}
 			m.getBody().applyForce(new Vec2(xComp, yComp), m.getBody().getPosition());
@@ -143,6 +187,6 @@ public class OurWorld extends World {
 			sign = (w.getBody().getPosition().y < m.getBody().getPosition().y ? 1 : -1);
 		}
 		
-		return (float) (sign*Constants.WALL_MULTIPLIER*Math.pow(1/dist, w.getExponent()) * w.getMagnitude());
+		return (float) (sign*w_multiplier*Math.pow(1/dist, w.getExponent()) * w.getMagnitude());
 	}
 }

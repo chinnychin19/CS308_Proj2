@@ -1,6 +1,7 @@
 package springies;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jboxGlue.*;
@@ -50,7 +51,7 @@ public class Springies extends JGEngine
 		
 		Parser p = new Parser();
 		p.parseEnvironment("assets/environment.xml", displayWidth(), displayHeight());
-		p.parseObjects("assets/lamp.xml");
+		p.parseObjects("assets/example.xml");
 	}
 	
 	@Override
@@ -59,6 +60,7 @@ public class Springies extends JGEngine
 		// update game objects
 		WorldManager.getWorld().step( 1f, 1 );
 		WorldManager.getWorld().applyForces();
+		checkForcesToggle();
 		moveObjects();
 		
 		checkCollision( 1 + 2, 1 );
@@ -69,5 +71,83 @@ public class Springies extends JGEngine
 	{
 		// nothing to do
 		// the objects paint themselves
+	}
+	
+	public void checkForcesToggle() {
+		// Toggle Gravity
+		if(getKey('G')){
+			clearKey('G');
+			if(WorldManager.getWorld().getGravityMultiplier() == Constants.GRAVITY_MULTIPLIER){
+				WorldManager.getWorld().setGravityMultiplier(0.0f);
+			}
+			else {
+				WorldManager.getWorld().setGravityMultiplier(Constants.GRAVITY_MULTIPLIER);
+			}
+		}
+		
+		// Toggle Viscosity
+		if(getKey('V')) {
+			clearKey('V');
+			if(WorldManager.getWorld().getViscosityMultiplier() == Constants.VISCOSITY_MULTIPLIER){
+				WorldManager.getWorld().setViscosityMultiplier(0.0f);
+			}
+			else {
+				WorldManager.getWorld().setViscosityMultiplier(Constants.VISCOSITY_MULTIPLIER);
+			}
+		}
+		
+		// Toggle COM Force
+		if(getKey('M')) {
+			clearKey('M');
+			if(WorldManager.getWorld().getCOMMultiplier() == Constants.COM_MULTIPLIER){
+				WorldManager.getWorld().setCOMMultiplier(0.0f);
+			}
+			else {
+				WorldManager.getWorld().setCOMMultiplier(Constants.COM_MULTIPLIER);
+			}
+		}
+		
+		// Toggle Wall Repulsion
+		toggleWallRepulsion();
+	}
+	
+	public void toggleWallRepulsion() {
+		List<Wall> walls = (List) WorldManager.getWorld().getWalls();
+		
+		if(getKey('1')){
+			clearKey('1');
+			for(Wall w: walls){
+				if (w.getId().equals(Constants.ID_TOP_WALL)){
+					w.setActivity(!w.getActivity());
+				}
+			}
+		}
+
+		if(getKey('2')){
+			clearKey('2');
+			for(Wall w: walls){
+				if (w.getId().equals(Constants.ID_RIGHT_WALL)){
+					w.setActivity(!w.getActivity());
+				}
+			}
+		}
+
+		if(getKey('3')){
+			clearKey('3');
+			for(Wall w: walls){
+				if (w.getId().equals(Constants.ID_BOTTOM_WALL)){
+					w.setActivity(!w.getActivity());
+				}
+			}
+		}
+
+		if(getKey('4')){
+			clearKey('4');
+			for(Wall w: walls){
+				if (w.getId().equals(Constants.ID_LEFT_WALL)){
+					w.setActivity(!w.getActivity());
+				}
+			}
+		}
 	}
 }
