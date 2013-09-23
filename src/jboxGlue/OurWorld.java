@@ -2,10 +2,6 @@ package jboxGlue;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;

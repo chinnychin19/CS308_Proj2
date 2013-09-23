@@ -1,14 +1,22 @@
 package ourObjects;
 
+/**
+ * This class represents "muscles", which are just springs with sinusoidally
+ * oscillating rest lengths.
+ * 
+ * @author Chandy
+ * 
+ */
+
 public class Muscle extends Spring {
 	private double myAmplitude, myAverageRestLength;
 	private int mySteps;
 
 	/**
-	 * This class represents "muscles", which are springs with oscillating rest
-	 * lengths. The frequency of these oscillations is a preset constant. By
-	 * default amplitude is 0 and the average rest length is equivalent to the
-	 * initial length between the two anchored masses.
+	 * 
+	 * The only constructor. The frequency of the oscillations is a preset
+	 * constant. By default amplitude is 0 and the average rest length is
+	 * equivalent to the initial length between the two anchored masses.
 	 * 
 	 * @param animId
 	 *            Used by the underlying engine
@@ -38,6 +46,10 @@ public class Muscle extends Spring {
 		myAverageRestLength = restLength;
 	}
 
+	/**
+	 * Uses a sine function to oscillate the rest length. Uses a frame count to
+	 * measure time.
+	 */
 	private void doHarmonicMotion() {
 		mySteps++;
 		setRestLength(myAverageRestLength + Constants.AMPLITUDE_MULTIPLIER
