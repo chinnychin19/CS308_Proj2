@@ -1,24 +1,30 @@
 package springies;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.swing.JOptionPane;
 
 import jboxGlue.*;
-import jgame.JGColor;
 import jgame.platform.JGEngine;
 import ourObjects.*;
 
-import org.jbox2d.common.Vec2;
-
-import walls.Wall;
+/**
+ * This class sets up the canvas, calls the WorldManager to initialize the
+ * World, and listens for user interaction through the mouse and keyboard. In
+ * this way, it is able to take appropriate action to toggle certain forces,
+ * drag assemblies, create/destroy assemblies, and change the size of the walled
+ * in area.
+ * 
+ * @author Chandy
+ * 
+ */
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
 	private static Parser myParser;
+	private Mass closestMass, mouseMass;
+	private Spring mouseSpring;
+	private boolean isClicked = false;
 
 	public Springies() {
 		// set the window size
@@ -40,6 +46,10 @@ public class Springies extends JGEngine {
 		);
 	}
 
+	/**
+	 * Calls initWorld() in WorldManager and tells the parser to parse the given
+	 * environment and assembly XML files.
+	 */
 	@Override
 	public void initGame() {
 		setFrameRate(60, 2);
@@ -49,6 +59,10 @@ public class Springies extends JGEngine {
 		myParser.parseObjects("assets/jello.xml");
 	}
 
+	/**
+	 * This is called each frame. It tells the world to apply all environmental
+	 * forces and checks for user input.
+	 */
 	@Override
 	public void doFrame() {
 		// update game objects
@@ -61,10 +75,11 @@ public class Springies extends JGEngine {
 		checkAssemblies();
 	}
 
-	private Mass closestMass, mouseMass;
-	private Spring mouseSpring;
-	private boolean isClicked = false;
-
+	/**
+	 * If the user clicks, this instantiates a temporary mass and spring to move
+	 * the targeted assembly around the area. The mass and spring are removed
+	 * when the user releases the click.
+	 */
 	private void checkMouse() {
 		if (!isClicked && getMouseButton(1)) {
 			isClicked = true;
@@ -117,7 +132,7 @@ public class Springies extends JGEngine {
 		// the objects paint themselves
 	}
 
-	public void checkAssemblies() {
+	private void checkAssemblies() {
 		if (getKey('C')) {
 			clearKey('C');
 			WorldManager.getWorld().clearObjects();
@@ -130,7 +145,7 @@ public class Springies extends JGEngine {
 		}
 	}
 
-	public void checkForcesToggle() {
+	private void checkForcesToggle() {
 		// Toggle Gravity
 		if (getKey('G')) {
 			clearKey('G');
