@@ -4,7 +4,6 @@ import ourObjects.Constants;
 
 public class RightWallEgg extends WallEgg {
 
-	
 	public RightWallEgg(double x, double y, double len, double thick,
 			double mag, double exp) {
 		super(x, y, len, thick, mag, exp);
@@ -12,7 +11,8 @@ public class RightWallEgg extends WallEgg {
 
 	@Override
 	public Wall hatchEgg() {
-		return new RightWall(Constants.ID_RIGHT_WALL, myX, myY, myLength, myThickness, myMagnitude, myExponent);
+		return new RightWall(Constants.ID_RIGHT_WALL, myX, myY, myLength,
+				myThickness, myMagnitude, myExponent);
 	}
 
 }

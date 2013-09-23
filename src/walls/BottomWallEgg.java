@@ -11,7 +11,8 @@ public class BottomWallEgg extends WallEgg {
 
 	@Override
 	public Wall hatchEgg() {
-		return new BottomWall(Constants.ID_BOTTOM_WALL, myX, myY, myLength, myThickness, myMagnitude, myExponent);
+		return new BottomWall(Constants.ID_BOTTOM_WALL, myX, myY, myLength,
+				myThickness, myMagnitude, myExponent);
 	}
 
 }

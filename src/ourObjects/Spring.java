@@ -18,12 +18,15 @@ public class Spring extends PhysicalObject {
 		myMass2 = m2;
 		destroyed = false;
 	}
+
 	public void setRestLength(double restLength) {
 		myRestLength = restLength;
 	}
+
 	public void setConstant(double constant) {
 		myConstant = constant;
 	}
+
 	@Override
 	public void destroy() {
 		destroyed = true;
@@ -32,51 +35,53 @@ public class Spring extends PhysicalObject {
 	private static double distance(double x1, double y1, double x2, double y2) {
 		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 	}
-	
+
 	private double getCurLength() {
-		return distance(myMass1.getX(), myMass1.getY(), myMass2.getX(), myMass2.getY());
+		return distance(myMass1.getX(), myMass1.getY(), myMass2.getX(),
+				myMass2.getY());
 	}
-	
+
 	public double getRestLength() {
 		return myRestLength;
 	}
-	
+
 	public Mass getMass1() {
 		return myMass1;
 	}
-	
+
 	public Mass getMass2() {
 		return myMass2;
 	}
-		
+
 	public void move() {
 		if (destroyed) {
 			return;
 		}
 		applyForce();
 	}
-	
+
 	private void applyForce() {
-		//Unit vector pointing from m1 to m2
-		Vec2 uVec = UnitVectors.unitVector(myMass1.getBody().getPosition(), 
+		// Unit vector pointing from m1 to m2
+		Vec2 uVec = UnitVectors.unitVector(myMass1.getBody().getPosition(),
 				myMass2.getBody().getPosition());
-		
-		//Force is positive if contracting
-		float force = Constants.SPRING_MULTIPLIER * (float) 
-				((getCurLength()-myRestLength) * myConstant);
-		
-		myMass1.getBody().applyForce(new Vec2(uVec.x * force, uVec.y * force), 
+
+		// Force is positive if contracting
+		float force = Constants.SPRING_MULTIPLIER
+				* (float) ((getCurLength() - myRestLength) * myConstant);
+
+		myMass1.getBody().applyForce(new Vec2(uVec.x * force, uVec.y * force),
 				myMass1.getBody().getPosition());
-		myMass2.getBody().applyForce(new Vec2(-uVec.x * force, -uVec.y * force), 
+		myMass2.getBody().applyForce(
+				new Vec2(-uVec.x * force, -uVec.y * force),
 				myMass2.getBody().getPosition());
 	}
-		
+
 	@Override
 	public void paintShape() {
 		if (destroyed) {
 			return;
 		}
-		myEngine.setColor( myColor );
+		myEngine.setColor(myColor);
 		Vec2 p1 = myMass1.getBody().getPosition();
 		Vec2 p2 = myMass2.getBody().getPosition();
 		myEngine.drawLine(p1.x, p1.y, p2.x, p2.y);

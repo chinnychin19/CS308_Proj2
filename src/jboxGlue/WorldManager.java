@@ -8,33 +8,26 @@ import org.jbox2d.dynamics.World;
 
 import ourObjects.Constants;
 
-public class WorldManager
-{
+public class WorldManager {
 	public static OurWorld ourWorld;
-	
-	static
-	{
+
+	static {
 		ourWorld = null;
 	}
-	
-	public static OurWorld getWorld( )
-	{
+
+	public static OurWorld getWorld() {
 		// make sure we have a world, just in case...
-		if( ourWorld == null )
-		{
-			throw new Error( "call initWorld() before you call getWorld()!" );
+		if (ourWorld == null) {
+			throw new Error("call initWorld() before you call getWorld()!");
 		}
-		
+
 		return ourWorld;
 	}
-	
-	public static void initWorld( JGEngine engine )
-	{
-		AABB worldBounds = new AABB(
-			new Vec2( 0, 0 ),
-			new Vec2( engine.displayWidth(), engine.displayHeight() )
-		);
+
+	public static void initWorld(JGEngine engine) {
+		AABB worldBounds = new AABB(new Vec2(0, 0), new Vec2(
+				engine.displayWidth(), engine.displayHeight()));
 		Vec2 gravity = Constants.DEFAULT_GRAVITY;
-		ourWorld = new OurWorld( worldBounds, gravity, true );
+		ourWorld = new OurWorld(worldBounds, gravity, true);
 	}
 }

@@ -11,9 +11,10 @@ import jgame.JGObject;
 
 public class MovingMass extends Mass {
 
-	public MovingMass(String animId, double x, double y, double xSpeed, double ySpeed, double mass) {
+	public MovingMass(String animId, double x, double y, double xSpeed,
+			double ySpeed, double mass) {
 		super(animId, x, y, mass);
 		setPos(x, y);
-		getBody().setLinearVelocity(new Vec2((float)xSpeed, (float)ySpeed));
+		getBody().setLinearVelocity(new Vec2((float) xSpeed, (float) ySpeed));
 	}
 }

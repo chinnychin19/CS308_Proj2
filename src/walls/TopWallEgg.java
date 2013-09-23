@@ -8,10 +8,11 @@ public class TopWallEgg extends WallEgg {
 			double exp) {
 		super(x, y, len, thick, mag, exp);
 	}
-	
+
 	@Override
 	public Wall hatchEgg() {
-		return new TopWall(Constants.ID_TOP_WALL, myX, myY, myLength, myThickness, myMagnitude, myExponent);
+		return new TopWall(Constants.ID_TOP_WALL, myX, myY, myLength,
+				myThickness, myMagnitude, myExponent);
 	}
 
 }

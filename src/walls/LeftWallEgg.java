@@ -11,7 +11,8 @@ public class LeftWallEgg extends WallEgg {
 
 	@Override
 	public Wall hatchEgg() {
-		return new LeftWall(Constants.ID_LEFT_WALL, myX, myY, myLength, myThickness, myMagnitude, myExponent);
+		return new LeftWall(Constants.ID_LEFT_WALL, myX, myY, myLength,
+				myThickness, myMagnitude, myExponent);
 	}
 
 }
