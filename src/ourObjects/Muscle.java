@@ -24,7 +24,7 @@ public class Muscle extends Spring {
 	
 	private void doHarmonicMotion() {
 		mySteps++;
-		setRestLength(myInitialRestLength + myAmplitude * 
+		setRestLength(myInitialRestLength + Constants.AMPLITUDE_MULTIPLIER * myAmplitude * 
 				Math.sin(2 * Math.PI * Constants.MUSCLE_FREQUENCY * mySteps));
 	}
 }

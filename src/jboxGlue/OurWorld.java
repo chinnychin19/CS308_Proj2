@@ -208,21 +208,16 @@ public class OurWorld extends World {
 	}
 
 	public void inflateWalls(double inflationPixels) {
-		Wall ww = wallList.iterator().next();
 		Collection<WallEgg> eggs = new ArrayList<WallEgg>();
 		for (Wall w: wallList) {
-			print("Old "+w);
 			eggs.add(w.layEgg(inflationPixels));
 			w.remove();
 		}
 		Collection<Wall> newWalls = new ArrayList<Wall>();
 		for (WallEgg e : eggs) {
-			print(e.toString());
 			newWalls.add(e.hatchEgg());
 		}
 		wallList = newWalls;
-		ww = wallList.iterator().next();
-		print("New "+ww);
 	}
 
 	public Collection<Mass> getMasses() {

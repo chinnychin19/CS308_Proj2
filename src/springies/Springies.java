@@ -66,15 +66,34 @@ public class Springies extends JGEngine
 		checkAssemblies();
 	}
 	
+	private Mass closestMass, mouseMass;
+	private Spring mouseSpring;
+	private boolean isClicked = false;
 	private void checkMouse() {
-		if (getMouseButton(1)) {
-			clearMouseButton(1);
+		if (!isClicked && getMouseButton(1)) {
+			print("clicked!");
+			isClicked = true;
+//			clearMouseButton(1);
 			int mx = getMouseX(), my = getMouseY();
-			Mass closestMass = findClosestMass(mx, my);
-//			closestMass.remove();
+			closestMass = findClosestMass(mx, my);
+			mouseMass = new Mass("mouseMass", mx, my, 0);
+			mouseSpring = new Spring("mouseSpring", mouseMass, closestMass);
+		} else if (isClicked && !getMouseButton(1)) {
+			print("released!");
+			isClicked = false;
+			mouseMass.remove();
+			mouseMass = null;
+			mouseSpring.remove();
+			mouseSpring = null;
+		}
+		if (isClicked) {
+			mouseMass.setPos(getMouseX(), getMouseY());
 		}
 	}
 
+	private void print(Object o) {
+		System.out.println(o.toString());
+	}
 	private Mass findClosestMass(int mx, int my) {
 		Collection<Mass> masses = WorldManager.getWorld().getMasses();
 		double minDist = Integer.MAX_VALUE; //will store the squared distance
