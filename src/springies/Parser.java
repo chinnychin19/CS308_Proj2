@@ -234,7 +234,7 @@ public class Parser {
 					springList.add(theSpring);
 				} else if (nodeType.equals(Parser.ID_MUSCLE)) {
 					Muscle theMuscle = new Muscle(Parser.ID_MUSCLE, m1, m2);
-					theMuscle.setInitialRestLength(Math.sqrt(Math.pow(m2.getX()
+					theMuscle.setAverageRestLength(Math.sqrt(Math.pow(m2.getX()
 							- m1.getX(), 2)
 							+ Math.pow(m2.getY() - m1.getY(), 2)));
 					theMuscle.setConstant(constant);
