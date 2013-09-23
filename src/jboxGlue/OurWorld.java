@@ -17,6 +17,20 @@ import ourObjects.Spring;
 import walls.Wall;
 import walls.WallEgg;
 
+/**
+ * 
+ * This is where the magic happens. All force calculations are done here, as
+ * well as the storage of all game objects. Game objects are stored so that they
+ * can be accessed without having to go through the engine and manage object ID
+ * numbers. All forces and force multipliers are set here, but will generally be
+ * modified through parsing an environment, or toggling forces.
+ * 
+ * 
+ * 
+ * 
+ * @author Chandy
+ */
+
 public class OurWorld extends World {
 	private Collection<Mass> massList;
 	private Collection<Spring> springList;
@@ -77,6 +91,10 @@ public class OurWorld extends World {
 		v_multiplier = (v_multiplier == 0 ? Constants.VISCOSITY_MULTIPLIER : 0);
 	}
 
+	/**
+	 * Toggles whether a wall's repulsion force should be calculated
+	 * @param id The ID of the wall to toggle
+	 */
 	public void toggleWall(String id) {
 		for (Wall w : wallList) {
 			if (w.getId().equals(id)) {
@@ -105,11 +123,16 @@ public class OurWorld extends World {
 		return w_multiplier;
 	}
 
-	public void print(Object o) {
-		System.out.println(o.toString());
-	}
-
 	// F = m * a, so multiply gravity by mass
+	/**
+	 * Gravity is applied to masses by calculating the force acting on them and
+	 * then applying it to that mass. Calculations occur independently of
+	 * application of the force.
+	 * 
+	 * @param m
+	 *            The mass for which gravity is being calculated
+	 * @return
+	 */
 	private Vec2 forceOfGravity(Mass m) {
 		float mass = m.getBody().getMass();
 		return new Vec2(gravity.x * mass * g_multiplier, gravity.y * mass
@@ -123,6 +146,12 @@ public class OurWorld extends World {
 		applyWallRepulsion();
 	}
 
+	/**
+	 * Center of Mass (COM) is a force that pulls all objects towards the
+	 * collective center of mass. This is calculated by first finding the COM
+	 * point, and then applying a force to each object individually towards the
+	 * center of mass.
+	 */
 	private void applyCenterOfMass() {
 		Vec2 comPoint = getCOMPoint();
 		for (Mass m : massList) {
@@ -137,6 +166,12 @@ public class OurWorld extends World {
 		}
 	}
 
+	/**
+	 * Calculated the COM point by summing the components of each of the mass,
+	 * then dividing the 'X' and 'Y' positions by the overall mass.
+	 * 
+	 * @return COMPoint The center of mass point
+	 */
 	private Vec2 getCOMPoint() {
 		float sumX = 0, sumY = 0, totalMass = 0;
 		for (Mass m : massList) {
@@ -149,6 +184,9 @@ public class OurWorld extends World {
 		return new Vec2(avgX, avgY);
 	}
 
+	/**
+	 * Where gravity is applied from the forceOfGravity method
+	 */
 	private void applyGravity() {
 		for (Mass m : massList) {
 			m.getBody()
@@ -156,6 +194,12 @@ public class OurWorld extends World {
 		}
 	}
 
+	/**
+	 * Viscosity is a resistive force, so it is always in the opposite direction
+	 * of the objects motion. This force is calculated by taking the objects
+	 * linear velocity vector, reversing it, scaling it by the viscosity
+	 * constants, and then finally re-applying the force to the object.
+	 */
 	private void applyViscosity() {
 		for (Mass m : massList) {
 			Vec2 dir = m.getBody().getLinearVelocity();
@@ -169,6 +213,15 @@ public class OurWorld extends World {
 		}
 	}
 
+	/**
+	 * Wall Repulsion is handled as a transverse force, meaning that the force
+	 * from the wall is constant along its length. Wall Repulsion is calculated
+	 * by summing up the individual wall repulsion forces on a mass, and then
+	 * applying the net force to it. Vertical and horizontal walls repulse
+	 * slightly differently(e.g. vertical walls only affect an objects 'X'
+	 * dimension), so the calculation of the repulsion force has to reflect
+	 * that.
+	 */
 	private void applyWallRepulsion() {
 		for (Mass m : massList) {
 			float xComp = 0;
@@ -209,6 +262,9 @@ public class OurWorld extends World {
 				* Math.pow(1 / dist, w.getExponent()) * w.getMagnitude());
 	}
 
+	/**
+	 * Clears all game objects (i.e. not walls) objects from the playing field
+	 */
 	public void clearObjects() {
 		for (Spring s : springList) {
 			s.remove();
@@ -220,6 +276,10 @@ public class OurWorld extends World {
 		massList.clear();
 	}
 
+	/**
+	 * 
+	 * @param inflationPixels
+	 */
 	public void inflateWalls(double inflationPixels) {
 		Collection<WallEgg> eggs = new ArrayList<WallEgg>();
 		for (Wall w : wallList) {
@@ -233,6 +293,9 @@ public class OurWorld extends World {
 		wallList = newWalls;
 	}
 
+	/**
+	 * @return Collection<Mass> A List of the masses currently in the world
+	 */
 	public Collection<Mass> getMasses() {
 		return massList;
 	}
