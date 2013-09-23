@@ -87,7 +87,9 @@ public class OurWorld extends World {
 
 	/**
 	 * Toggles whether a wall's repulsion force should be calculated
-	 * @param id The ID of the wall to toggle
+	 * 
+	 * @param id
+	 *            The ID of the wall to toggle
 	 */
 	public void toggleWall(String id) {
 		for (Wall w : wallList) {
@@ -125,7 +127,8 @@ public class OurWorld extends World {
 	 * 
 	 * @param m
 	 *            The mass for which gravity is being calculated
-	 * @return
+	 * @return A Vec2 object that stores the x and y components of the gravity
+	 *         vector separately.
 	 */
 	private Vec2 forceOfGravity(Mass m) {
 		float mass = m.getBody().getMass();

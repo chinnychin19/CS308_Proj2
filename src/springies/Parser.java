@@ -3,7 +3,6 @@ package springies;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -252,7 +251,8 @@ public class Parser {
 	 * masses to construct springs with references directly to the masses they
 	 * are attached to.
 	 * 
-	 * @param links A NodeList of the 'links' in the XML
+	 * @param links
+	 *            A NodeList of the 'links' in the XML
 	 */
 	private void constructLinks(NodeList links) {
 		for (int i = 0; i < links.getLength(); i++) {
@@ -268,6 +268,7 @@ public class Parser {
 				String strRestLength = getNodeAttr("restLength", curNode);
 				double restLength = strRestLength.isEmpty() ? 0 : Double
 						.parseDouble(strRestLength);
+				boolean restLengthProvided = !strRestLength.isEmpty();
 				String strConstant = getNodeAttr("constant", curNode);
 				double constant = strConstant.isEmpty() ? Constants.DEFAULT_SPRING_CONSTANT
 						: Double.parseDouble(strConstant);
@@ -278,12 +279,19 @@ public class Parser {
 				if (nodeType.equals(Parser.ID_SPRING)) {
 					Spring theSpring = new Spring(Parser.ID_SPRING, m1, m2);
 					theSpring.setConstant(constant);
+					if (restLengthProvided) {
+						theSpring.setRestLength(restLength);
+					}
 					springList.add(theSpring);
 				} else if (nodeType.equals(Parser.ID_MUSCLE)) {
 					Muscle theMuscle = new Muscle(Parser.ID_MUSCLE, m1, m2);
-					theMuscle.setAverageRestLength(Math.sqrt(Math.pow(m2.getX()
-							- m1.getX(), 2)
-							+ Math.pow(m2.getY() - m1.getY(), 2)));
+					if (restLengthProvided) {
+						theMuscle.setAverageRestLength(restLength);
+					} else {
+						theMuscle.setAverageRestLength(Math.sqrt(Math.pow(
+								m2.getX() - m1.getX(), 2)
+								+ Math.pow(m2.getY() - m1.getY(), 2)));
+					}
 					theMuscle.setConstant(constant);
 					theMuscle.setAmplitude(amplitude);
 					springList.add(theMuscle);
