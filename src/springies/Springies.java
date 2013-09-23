@@ -67,7 +67,6 @@ public class Springies extends JGEngine {
 
 	private void checkMouse() {
 		if (!isClicked && getMouseButton(1)) {
-			print("clicked!");
 			isClicked = true;
 			// clearMouseButton(1);
 			int mx = getMouseX(), my = getMouseY();
@@ -75,7 +74,6 @@ public class Springies extends JGEngine {
 			mouseMass = new Mass("mouseMass", mx, my, 0);
 			mouseSpring = new Spring("mouseSpring", mouseMass, closestMass);
 		} else if (isClicked && !getMouseButton(1)) {
-			print("released!");
 			isClicked = false;
 			mouseMass.remove();
 			mouseMass = null;
@@ -85,10 +83,6 @@ public class Springies extends JGEngine {
 		if (isClicked) {
 			mouseMass.setPos(getMouseX(), getMouseY());
 		}
-	}
-
-	private void print(Object o) {
-		System.out.println(o.toString());
 	}
 
 	private Mass findClosestMass(int mx, int my) {
