@@ -1,6 +1,6 @@
 *.class
 bin/**
+doc/**
 # Package Files #
 *.war
 *.ear
-/bin
