@@ -6,6 +6,8 @@ import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
+import ourObjects.Constants;
+
 public class WorldManager
 {
 	public static OurWorld ourWorld;
@@ -32,7 +34,7 @@ public class WorldManager
 			new Vec2( 0, 0 ),
 			new Vec2( engine.displayWidth(), engine.displayHeight() )
 		);
-		Vec2 gravity = new Vec2( 0.0f, 0.0f );
+		Vec2 gravity = Constants.DEFAULT_GRAVITY;
 		ourWorld = new OurWorld( worldBounds, gravity, true );
 	}
 }

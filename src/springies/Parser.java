@@ -95,8 +95,12 @@ public class Parser {
 				Node curNode = environment.item(i);
 				if(curNode.getNodeName().equals(ID_WALL)) {
 					String id = getNodeAttr("id", curNode);
-					double repulsion = Double.parseDouble(getNodeAttr("magnitude", curNode));
-					double exponent = Double.parseDouble(getNodeAttr("exponent", curNode));
+					String strRepulsion = getNodeAttr("magnitude", curNode);
+					String strExponent = getNodeAttr("exponent", curNode);
+					double repulsion = strRepulsion.isEmpty() ? 
+							Constants.DEFAULT_WALL_REPULSION : Double.parseDouble(strRepulsion);
+					double exponent = strExponent.isEmpty() ? 
+							Constants.DEFAULT_WALL_EXPONENT : Double.parseDouble(strExponent);
 					
 					Wall wall = null;
 					

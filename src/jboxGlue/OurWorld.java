@@ -21,7 +21,9 @@ public class OurWorld extends World {
 	private Collection<Mass> massList;
 	private Collection<Spring> springList;
 	private Collection<Wall> wallList;
-	private double viscosity = 0, com_magnitude = 1000, com_exponent = 2;
+	private double viscosity = Constants.DEFAULT_VISCOSITY, 
+			com_magnitude = Constants.DEFAULT_COM_MAGNITUDE, 
+			com_exponent = Constants.DEFAULT_COM_EXPONENT;
 	private float 	v_multiplier = Constants.VISCOSITY_MULTIPLIER,
 					g_multiplier = Constants.GRAVITY_MULTIPLIER,
 					c_multiplier = Constants.COM_MULTIPLIER,
