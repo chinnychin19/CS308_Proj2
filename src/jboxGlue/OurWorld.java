@@ -26,8 +26,6 @@ import walls.WallEgg;
  * modified through parsing an environment, or toggling forces.
  * 
  * 
- * 
- * 
  * @author Chandy
  */
 

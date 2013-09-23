@@ -28,6 +28,14 @@ import walls.RightWall;
 import walls.TopWall;
 import walls.Wall;
 
+/**
+ * This class contains all the logic for parsing XML files and generating
+ * springies objects from it. The parser has the ability to parse both
+ * environments and springies objects.
+ * 
+ * @author Chandy
+ * 
+ */
 public class Parser {
 
 	private Map<String, Mass> massMap;
@@ -45,6 +53,13 @@ public class Parser {
 		wallList = new ArrayList<Wall>();
 	}
 
+	/**
+	 * The parsing method used to parse and generate objects. Constructs node
+	 * and links separately from reading them into memory.
+	 * 
+	 * @param path
+	 *            The path to the XML file being read
+	 */
 	public void parseObjects(String path) { // nodes are masses and fixed masses
 		massMap.clear();
 		springList.clear();
@@ -64,6 +79,14 @@ public class Parser {
 		}
 	}
 
+	/**
+	 * The parsing method used to generate the environment. Also contains a
+	 * reference to the world, so that environmental variables can be set
+	 * directly.
+	 * 
+	 * @param path
+	 *            The path to the XML file being read
+	 */
 	public void parseEnvironment(String path) {
 		OurWorld myWorld = WorldManager.getWorld();
 		try {
@@ -154,6 +177,14 @@ public class Parser {
 		return massMap.values();
 	}
 
+	/**
+	 * Parses the individual elements and determines whether to assign default
+	 * values. Uses coordinate correction to prevent elements from being created
+	 * off screen.
+	 * 
+	 * @param nodes
+	 *            NodeList of all the 'node' elements of the XML
+	 */
 	private void constructNodes(NodeList nodes) {
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node curNode = nodes.item(i);
@@ -189,7 +220,16 @@ public class Parser {
 		}
 	}
 
-	// keep coordinates on the viewing screen
+	/**
+	 * Used to determine if an object will be offscreen of not, and correct it's
+	 * coordinates if it is.
+	 * 
+	 * @param x
+	 *            The x coordinate of the object
+	 * @param y
+	 *            The y coordinate of the object
+	 * @return Corrected coordinate pair in the form of a Vec2
+	 */
 	private Vec2 getCoordinateCorrections(double x, double y) {
 		// Check x
 		if (x < Constants.WALL_THICKNESS * 2) {
@@ -207,6 +247,13 @@ public class Parser {
 		return new Vec2((float) x, (float) y);
 	}
 
+	/**
+	 * Constructs the 'links' in the XML (springs and muscles). Uses the map of
+	 * masses to construct springs with references directly to the masses they
+	 * are attached to.
+	 * 
+	 * @param links A NodeList of the 'links' in the XML
+	 */
 	private void constructLinks(NodeList links) {
 		for (int i = 0; i < links.getLength(); i++) {
 			Node curNode = links.item(i);
@@ -246,7 +293,7 @@ public class Parser {
 	}
 
 	/**
-	 * Helper Methods for XML Parsing Thanks to Eric Bruno for the sample code.
+	 * Helper Methods for XML Parsing. Thanks to Eric Bruno for the sample code.
 	 **/
 	protected Node getNode(String tagName, NodeList nodes) {
 		for (int x = 0; x < nodes.getLength(); x++) {
