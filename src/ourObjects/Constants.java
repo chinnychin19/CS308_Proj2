@@ -19,7 +19,6 @@ public interface Constants {
 	public static final double DAMPING_FACTOR = .95;
 	public static final JGColor MASS_COLOR = JGColor.cyan, SPRING_COLOR = JGColor.orange, WALL_COLOR = JGColor.red;
 	public static final double DEFAULT_SPRING_CONSTANT = 1;
-	public static final double WALL_MARGIN = 1;
 	public static final double WALL_THICKNESS = 10;
 	public static final float VISCOSITY_MULTIPLIER = 200;
 	public static final float SPRING_MULTIPLIER = 10f;
@@ -27,4 +26,5 @@ public interface Constants {
 	public static final float COM_MULTIPLIER = 1f;
 	public static final float WALL_MULTIPLIER = 10f;
 	public static final float MUSCLE_FREQUENCY = .005f;
+	public static final int PIXELS_FOR_INFLATION = 10;
 }

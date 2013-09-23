@@ -14,7 +14,8 @@ import org.jbox2d.dynamics.World;
 import ourObjects.Constants;
 import ourObjects.Mass;
 import ourObjects.Spring;
-import ourObjects.Wall;
+import walls.Wall;
+import walls.WallEgg;
 
 public class OurWorld extends World {
 	private Collection<Mass> massList;
@@ -23,7 +24,7 @@ public class OurWorld extends World {
 	private double viscosity = 0, com_magnitude = 1000, com_exponent = 2;
 	private float 	v_multiplier = Constants.VISCOSITY_MULTIPLIER,
 					g_multiplier = Constants.GRAVITY_MULTIPLIER,
-					m_multiplier = Constants.COM_MULTIPLIER,
+					c_multiplier = Constants.COM_MULTIPLIER,
 					w_multiplier = Constants.WALL_MULTIPLIER;
 	private Vec2 gravity = new Vec2(0,0);
 	
@@ -50,28 +51,33 @@ public class OurWorld extends World {
 		com_exponent = exponent;
 	}
 	
-	public void setMasses(Collection<Mass> masses) {
-		massList = masses;
+	public void addMasses(Collection<Mass> masses) {
+		massList.addAll(masses);
 	}
 	
-	public void setSprings(Collection<Spring> springs) {
-		springList = springs;
+	public void addSprings(Collection<Spring> springs) {
+		springList.addAll(springs);
 	}
 	
 	public void setWalls(Collection<Wall> walls) {
 		wallList = walls;
 	}
-
-	public void setCOMMultiplier(float multiplier) {
-		m_multiplier = multiplier;
+	
+	public void toggleCOM() {
+		c_multiplier = (c_multiplier == 0 ? Constants.COM_MULTIPLIER : 0);
 	}
-
-	public void setGravityMultiplier(float multiplier) {
-		g_multiplier = multiplier;
+	public void toggleGravity() {
+		g_multiplier = (g_multiplier == 0 ? Constants.GRAVITY_MULTIPLIER : 0);
 	}
-
-	public void setViscosityMultiplier(float multiplier) {
-		v_multiplier = multiplier;
+	public void toggleViscosity() {
+		v_multiplier = (v_multiplier == 0 ? Constants.VISCOSITY_MULTIPLIER : 0);
+	}
+	public void toggleWall(String id) {
+		for(Wall w: wallList){
+			if (w.getId().equals(id)){
+				w.toggle();
+			}
+		}
 	}
 
 	public void setWallMultiplier(float multiplier) {
@@ -79,7 +85,7 @@ public class OurWorld extends World {
 	}
 	
 	public float getCOMMultiplier() {
-		return m_multiplier;
+		return c_multiplier;
 	}
 
 	public float getGravityMultiplier() {
@@ -188,5 +194,38 @@ public class OurWorld extends World {
 		}
 		
 		return (float) (sign*w_multiplier*Math.pow(1/dist, w.getExponent()) * w.getMagnitude());
+	}
+
+	public void clearObjects() {
+		for (Spring s : springList) {
+			s.remove();
+		}
+		for (Mass m : massList) {
+			m.remove();
+		}
+		springList.clear();
+		massList.clear();
+	}
+
+	public void inflateWalls(double inflationPixels) {
+		Wall ww = wallList.iterator().next();
+		Collection<WallEgg> eggs = new ArrayList<WallEgg>();
+		for (Wall w: wallList) {
+			print("Old "+w);
+			eggs.add(w.layEgg(inflationPixels));
+			w.remove();
+		}
+		Collection<Wall> newWalls = new ArrayList<Wall>();
+		for (WallEgg e : eggs) {
+			print(e.toString());
+			newWalls.add(e.hatchEgg());
+		}
+		wallList = newWalls;
+		ww = wallList.iterator().next();
+		print("New "+ww);
+	}
+
+	public Collection<Mass> getMasses() {
+		return massList;
 	}
 }

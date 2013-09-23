@@ -1,4 +1,4 @@
-package ourObjects;
+package springies;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,15 +17,37 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import ourObjects.Constants;
+import ourObjects.Mass;
+import ourObjects.MovingMass;
+import ourObjects.Muscle;
+import ourObjects.Spring;
+import walls.BottomWall;
+import walls.LeftWall;
+import walls.RightWall;
+import walls.TopWall;
+import walls.Wall;
+
 public class Parser {
 
-	private Map<String, Mass> massMap = new HashMap<String, Mass>();
-	private List<Spring> springList = new ArrayList<Spring>();
-	private List<Wall> wallList = new ArrayList<Wall>();
+	private Map<String, Mass> massMap;
+	private List<Spring> springList;
+	private List<Wall> wallList;
 	private static final String ID_MASS = "mass", ID_FIXED = "fixed", 
 			ID_SPRING = "spring", ID_MUSCLE = "muscle", ID_WALL = "wall"; 
+	private int viewWidth, viewHeight;
 
+	public Parser(int w, int h) {
+		viewWidth = w;
+		viewHeight = h;
+		massMap = new HashMap<String, Mass>();
+		springList = new ArrayList<Spring>();
+		wallList = new ArrayList<Wall>();
+	}
+	
 	public void parseObjects(String path) { //nodes are masses and fixed masses
+		massMap.clear();
+		springList.clear();
 		try{
 			DOMParser parser = new DOMParser();
 			parser.parse(path);
@@ -35,15 +57,15 @@ public class Parser {
 			NodeList links = getNode("links", model).getChildNodes();
 			constructNodes(nodes);
 			constructLinks(links);
-			WorldManager.getWorld().setMasses(getMassList());
-			WorldManager.getWorld().setSprings(getSpringList());
+			WorldManager.getWorld().addMasses(getMassList());
+			WorldManager.getWorld().addSprings(getSpringList());
 		}
 		catch(Exception e) {
 		    e.printStackTrace();
 		}
 	}
 	
-	public void parseEnvironment(String path, double viewWidth, double viewHeight) {
+	public void parseEnvironment(String path) {
 		OurWorld myWorld = WorldManager.getWorld();
 		try{
 			DOMParser parser = new DOMParser();
@@ -73,29 +95,36 @@ public class Parser {
 				Node curNode = environment.item(i);
 				if(curNode.getNodeName().equals(ID_WALL)) {
 					String id = getNodeAttr("id", curNode);
-					double repelmag = Double.parseDouble(getNodeAttr("magnitude", curNode));
+					double repulsion = Double.parseDouble(getNodeAttr("magnitude", curNode));
 					double exponent = Double.parseDouble(getNodeAttr("exponent", curNode));
 					
 					Wall wall = null;
 					
 					if(id.equals(Constants.ID_TOP_WALL)) {
-						wall = new Wall(id, viewWidth, Constants.WALL_THICKNESS, repelmag, exponent);
-						wall.setPos(viewWidth/2, Constants.WALL_MARGIN);
+						double x = viewWidth/2, 
+								y = Constants.WALL_THICKNESS/2;
+						wall = new TopWall(id, x, y, viewWidth, Constants.WALL_THICKNESS, 
+								repulsion, exponent);
+					} else if(id.equals(Constants.ID_LEFT_WALL)){
+						double x = Constants.WALL_THICKNESS/2, 
+								y = viewHeight/2;
+						wall = new LeftWall(id, x, y, 
+								viewHeight - Constants.WALL_THICKNESS*2, //don't overlap top and bottom 
+								Constants.WALL_THICKNESS, repulsion, exponent);
+					} else if(id.equals(Constants.ID_BOTTOM_WALL)) {
+						double x = viewWidth/2, 
+								y = viewHeight-Constants.WALL_THICKNESS/2;
+						wall = new BottomWall(id, x, y, viewWidth, Constants.WALL_THICKNESS, repulsion, exponent);
+					} else if(id.equals(Constants.ID_RIGHT_WALL)){
+						double x = viewWidth-Constants.WALL_THICKNESS/2, 
+								y = viewHeight/2;
+						wall = new RightWall(id, x, y, 
+								viewHeight - Constants.WALL_THICKNESS*2, 
+								Constants.WALL_THICKNESS, repulsion, exponent);
 					}
-					else if(id.equals(Constants.ID_RIGHT_WALL)){
-						wall = new Wall(id, Constants.WALL_THICKNESS, viewHeight, repelmag, exponent);
-						wall.setPos(Constants.WALL_MARGIN, viewHeight/2);
+					if (wall!=null) {
+						wallList.add(wall);
 					}
-					else if(id.equals(Constants.ID_BOTTOM_WALL)) {
-						wall = new Wall(id, viewWidth, Constants.WALL_THICKNESS, repelmag, exponent);
-						wall.setPos(viewWidth/2, viewHeight-Constants.WALL_MARGIN);
-					}
-					else if(id.equals(Constants.ID_LEFT_WALL)){
-						wall = new Wall(id, Constants.WALL_THICKNESS, viewHeight, repelmag, exponent);
-						wall.setPos(viewWidth-Constants.WALL_MARGIN, viewHeight/2);
-					}
-					
-					wallList.add(wall);
 				}
 			}
 			
@@ -125,6 +154,9 @@ public class Parser {
 				String id = getNodeAttr("id", curNode);
 				double x = Double.parseDouble(getNodeAttr("x", curNode));
 				double y = Double.parseDouble(getNodeAttr("y", curNode));
+				Vec2 newXY = getCoordinateCorrections(x, y);
+				x = newXY.x;
+				y = newXY.y;
 				
 				//Optional fields
 				String strVX = getNodeAttr("vx", curNode);
@@ -144,6 +176,24 @@ public class Parser {
 				}
 			}
 		}
+	}
+
+	//keep coordinates on the viewing screen
+	private Vec2 getCoordinateCorrections(double x, double y) {
+		// Check x
+		if (x < Constants.WALL_THICKNESS*2) {
+			x = Constants.WALL_THICKNESS*2;
+		} else if (x > viewWidth - Constants.WALL_THICKNESS*2) {
+			x = viewWidth - Constants.WALL_THICKNESS*2;
+		}
+		
+		// Check y
+		if (y < Constants.WALL_THICKNESS*2) {
+			y = Constants.WALL_THICKNESS*2;
+		} else if (y > viewHeight - Constants.WALL_THICKNESS*2) {
+			y = viewHeight - Constants.WALL_THICKNESS*2;
+		}
+		return new Vec2((float)x, (float)y);
 	}
 
 	private void constructLinks(NodeList links) {
@@ -166,11 +216,11 @@ public class Parser {
 				double amplitude = strAmplitude.isEmpty() ? 0 : Double.parseDouble(strAmplitude);
 				
 				if (nodeType.equals(Parser.ID_SPRING)) {
-					Spring theSpring = new Spring("", m1, m2);
+					Spring theSpring = new Spring(Parser.ID_SPRING, m1, m2);
 					theSpring.setConstant(constant);
 					springList.add(theSpring);
 				} else if (nodeType.equals(Parser.ID_MUSCLE)) {
-					Muscle theMuscle = new Muscle("", m1, m2);
+					Muscle theMuscle = new Muscle(Parser.ID_MUSCLE, m1, m2);
 					theMuscle.setInitialRestLength(Math.sqrt(Math.pow(m2.getX() - m1.getX(), 2) + Math.pow(m2.getY() - m1.getY(), 2)));
 					theMuscle.setConstant(constant);
 					theMuscle.setAmplitude(amplitude);

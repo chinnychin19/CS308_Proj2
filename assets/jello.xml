@@ -3,10 +3,10 @@
   <author></author>
 
   <nodes>
-    <mass id="m1" x="165" y="10" vx="0" vy="0"/>
-    <mass id="m2" x="285" y="10" vx="0" vy="0"/>
-    <mass id="m3" x="285" y="100" vx="0" vy="0"/>
-    <mass id="m4" x="165" y="100" vx="0" vy="0"/>
+    <mass id="m1" x="165" y="40" vx="0" vy="0"/>
+    <mass id="m2" x="285" y="40" vx="0" vy="0"/>
+    <mass id="m3" x="285" y="130" vx="0" vy="0"/>
+    <mass id="m4" x="165" y="130" vx="0" vy="0"/>
   </nodes>
 
   <links>

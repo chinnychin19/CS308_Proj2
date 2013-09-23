@@ -8,6 +8,7 @@ import jboxGlue.UnitVectors;
 public class Spring extends PhysicalObject {
 	private double myRestLength, myConstant;
 	private Mass myMass1, myMass2;
+	private boolean destroyed;
 
 	public Spring(String animId, Mass m1, Mass m2) {
 		super(animId, Constants.CID_SPRING, Constants.SPRING_COLOR);
@@ -15,12 +16,17 @@ public class Spring extends PhysicalObject {
 		myConstant = Constants.DEFAULT_SPRING_CONSTANT;
 		myMass1 = m1;
 		myMass2 = m2;
+		destroyed = false;
 	}
 	public void setRestLength(double restLength) {
 		myRestLength = restLength;
 	}
 	public void setConstant(double constant) {
 		myConstant = constant;
+	}
+	@Override
+	public void destroy() {
+		destroyed = true;
 	}
 
 	private static double distance(double x1, double y1, double x2, double y2) {
@@ -44,6 +50,9 @@ public class Spring extends PhysicalObject {
 	}
 		
 	public void move() {
+		if (destroyed) {
+			return;
+		}
 		applyForce();
 	}
 	
@@ -64,6 +73,9 @@ public class Spring extends PhysicalObject {
 		
 	@Override
 	public void paintShape() {
+		if (destroyed) {
+			return;
+		}
 		myEngine.setColor( myColor );
 		Vec2 p1 = myMass1.getBody().getPosition();
 		Vec2 p2 = myMass2.getBody().getPosition();
