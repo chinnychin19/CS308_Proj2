@@ -1,18 +1,28 @@
 package ourObjects;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jbox2d.collision.CircleDef;
 import org.jbox2d.common.Vec2;
 
-import jboxGlue.PhysicalObject;
 import jboxGlue.PhysicalObjectCircle;
-import jgame.JGColor;
 import jgame.JGObject;
+
+/**
+ * This is the base class we use to represent masses. This base class
+ * specifically represents a fixed mass and is extended by MovingMass. Each Mass
+ * object only keeps track of mass, location, and velocity. In this base class,
+ * the object has no reaction to collisions with other objects.
+ * 
+ * @author Chandy
+ */
 
 public class Mass extends PhysicalObjectCircle {
 
+	/**
+	 * The only constructor. By default, the initial velocity is 0.
+	 * @param animId	This is only used by the underlying engine
+	 * @param x			x coordinate of center
+	 * @param y			y coordinate of center
+	 * @param mass		The mass (may be 0 for fixed mass)
+	 */
 	public Mass(String animId, double x, double y, double mass) {
 		super(animId, Constants.CID_MASS, Constants.MASS_COLOR,
 				Constants.MASS_RADIUS, mass);
@@ -37,20 +47,7 @@ public class Mass extends PhysicalObjectCircle {
 	}
 
 	@Override
-	public void hit(JGObject other) {
-		// we hit something! bounce off it!
-		Vec2 velocity = myBody.getLinearVelocity();
-
-		// is it a tall wall?
-		final double DAMPING_FACTOR = Constants.DAMPING_FACTOR;
-		boolean isSide = other.getBBox().height > other.getBBox().width;
-		if (isSide) {
-			velocity.x *= -DAMPING_FACTOR;
-		} else {
-			velocity.y *= -DAMPING_FACTOR;
-		}
-
-		// apply the change
-		myBody.setLinearVelocity(velocity);
+	public void hit(JGObject obj) {
+		// do nothing
 	}
 }

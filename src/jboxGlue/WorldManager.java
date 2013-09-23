@@ -4,9 +4,16 @@ import jgame.platform.JGEngine;
 
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
 
 import ourObjects.Constants;
+
+/**
+ * This class is a slight change from what was given to us. The only difference
+ * is that it returns a custom World (OurWorld) instead.
+ * 
+ * @author Chandy
+ * 
+ */
 
 public class WorldManager {
 	public static OurWorld ourWorld;

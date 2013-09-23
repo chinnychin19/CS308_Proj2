@@ -4,6 +4,13 @@ import org.jbox2d.common.Vec2;
 
 import jgame.JGColor;
 
+/**
+ * This class stores useful constants that are used in various places throughout
+ * our project. Keeping them all stored in one place makes them easy to find.
+ * 
+ * @author Chandy
+ */
+
 public interface Constants {
 	// Collision IDs
 	public static final int CID_MASS = 0x01, CID_FIXEDMASS = 0x02,

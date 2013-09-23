@@ -2,6 +2,14 @@ package jboxGlue;
 
 import org.jbox2d.common.Vec2;
 
+/**
+ * This class is a helper class to aid with computing unit vectors and distances
+ * between points.
+ * 
+ * @author Chandy
+ * 
+ */
+
 public class UnitVectors {
 	public static Vec2 unitVector(Vec2 v1, Vec2 v2) {
 		float x = v2.x - v1.x;
